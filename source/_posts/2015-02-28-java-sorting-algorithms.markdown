@@ -23,29 +23,22 @@ categories:
 ```java
 package com.boxing.algorithm;
 
-public class InsertionSort implements SortAlgorithm{
-
+public class InsertionSort implements SortAlgorithm {
     @Override
     public int[] doSort(int[] array) {
-        for (int index = 1; index < array.length; index++) {
-            for (int i = index; i > 0; i--) {
-                if (isLessThanBefore(array, i)) {
-                    swapNumbers(array, i);
-                }
-            }
-        }
-        return array;
-    }
-
-    private boolean isLessThanBefore(int[] array, int i) {
-        return array[i] < array[i - 1];
-    }
-
-    private void swapNumbers(int[] array, int i) {
         int temp;
-        temp = array[i - 1];
-        array[i - 1] = array[i];
-        array[i] = temp;
+
+        for (int index = 1; index < array.length; index++) {
+            temp = array[index];
+            int i = index;
+            while (i > 0 && array[i - 1] > temp) {
+                array[i] = array[i - 1];
+                i--;
+            }
+            array[i] = temp;
+        }
+
+        return array;
     }
 }
 ```
@@ -77,8 +70,8 @@ package com.boxing.algorithm;
 public class BubbleSort implements SortAlgorithm {
     @Override
     public int[] doSort(int[] array) {
-        for (int index = array.length; index >= 0; index--) {
-            for (int i = 0; i < array.length - 1; i++) {
+        for (int index = 0; index<array.length-1;index++) {
+            for (int i = 0; i < array.length - 1-index; i++) {
                 if (isLargerThanAfter(array, i)) {
                     swapNumbers(array, i);
                 }
@@ -121,7 +114,7 @@ public class BubbleSortTest {
 
 实现快速排序的步骤：
 
-1. 从数组中选择一个元素，称为pivot。一般来说，pivot是数组中位于中间的元素。
+1. 从数组中任意选择一个元素，称为枢纽元（pivot）。虽然无论选择哪个元素作为pivot都可以完成排序，但是有些选择显然优于其他选择。将第一个元素作为pivot是一种错误的做法。安全的做法是随机选取pivot。最好的做法是选择数组的中值：一般的做法是使用左端、右端和中心位置上的三个元素的中值作为pivot。
 
 2. 对数组进行重新排序，所有比pivot小的数在pivot前面，所有比pivot大的数在pivot后面（相等的可以在任何一边）。经过这样的分区后，pivot就在它最终的位置上了。这个步骤叫做分区操作。
 
