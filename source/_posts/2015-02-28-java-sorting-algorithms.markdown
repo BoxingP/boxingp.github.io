@@ -122,6 +122,63 @@ public class BubbleSortTest {
 
 {% img /images/2015/quick-sort1.png 250 304 %}
 
+```java
+package com.boxing.algorithm;
+
+public class QuickSort implements SortAlgorithm {
+    int[] array;
+
+    @Override
+    public int[] doSort(int[] array) {
+        this.array = array;
+        doQuickSort(this.array, 0, this.array.length - 1);
+        return this.array;
+    }
+
+    private void doQuickSort(int[] array, int low, int high) {
+        if (low < high) {
+            int index = getIndex(array, low, high);
+            doQuickSort(array, low, index - 1);
+            doQuickSort(array, index + 1, high);
+        }
+    }
+
+    private int getIndex(int[] array, int lowIndex, int highIndex) {
+        int pivot = array[lowIndex];
+
+        while (lowIndex < highIndex) {
+            while (lowIndex < highIndex && array[highIndex] >= pivot) {
+                highIndex--;
+            }
+            array[lowIndex] = array[highIndex];
+
+            while (lowIndex < highIndex && array[lowIndex] <= pivot) {
+                lowIndex++;
+            }
+            array[highIndex] = array[lowIndex];
+        }
+        array[lowIndex] = pivot;
+
+        return lowIndex;
+    }
+}
+```
+
+```java
+public class QuickSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new QuickSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+```
+
+测试通过。上面的快速排序算法选择第一个元素作为pivot，这是错误的实践。我们换一种更好的实践。使用左端、右端和中心位置上的三个元素的中值作为pivot。
+
 **参考文献**
 
 1. [Java Sorting Algorithms](http://www.java2novice.com/java-sorting-algorithms/)
