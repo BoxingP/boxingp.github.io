@@ -224,6 +224,48 @@ categories:
 
 >重构的目的，正像在本章中描述的，是为了每天清洁你的代码。
 
+##第6章 一次编程实践
+
+>图示有时是不需要的。何时不需要呢？在创建了它们而没有验证它们的代码就打算去遵循它们时，图示就是无意的。画一幅图来探究一个想法是没有错的。然而，画一幅图后，不应该假定该图就是相关任务的最好设计。你会发现最好的设计是在你首先编写测试，一小步一小步前进时逐渐形成的。
+
+形象地展现了结对编程、TDD以及重构的过程。
+
+多一句嘴，之前一直在诺基亚手机上玩bowling的游戏，看完这章知道它的记分规则了。
+
+#第II部分 敏捷设计
+
+>在每次迭代中，团队改进系统设计，使设计尽可能适合于当前系统。团队不会花费许多时间去预测未来的需求和需要，也不会试图在今天就构建一些基础结构去支撑那些他们认为明天才会需要的特性。他们更愿意关注当前的系统结构，并使它尽可能地好。
+
+>**拙劣设计的症状**
+
+>- 僵化性（Rigidity）
+
+>- 脆弱性（Fragility）
+
+>- 牢固性（Immobility）
+
+>- 粘滞性（Viscosity）
+
+>- 不必要的复杂性（Needless Complexity）
+
+>- 不必要的重复（Needless Repetition）
+
+>- 晦涩性（Opacity）
+
+>**原则**
+
+>- 单一职责原则（The Single Responsibility Principle，简称SRP）
+
+>- 开放-封闭原则（The Open-Close Principle，简称OCP）
+
+>- Liskov替换原则（The Liskov Substitution Principle，简称LSP）
+
+>- 依赖倒置原则（The Dependency Inversion Principle，简称DIP）
+
+>- 接口隔离原则（The Interface Segregation Principle，简称ISP）
+
+这就是面向对象设计中所说的[SOLID](http://en.wikipedia.org/wiki/SOLID_%28object-oriented_design%29)。
+
 （先挖坑，马上填）
 
 {% img left /images/2015/agile-software-development.jpg 98 137 %}
