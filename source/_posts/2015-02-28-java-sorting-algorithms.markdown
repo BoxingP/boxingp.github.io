@@ -135,31 +135,47 @@ public class QuickSort implements SortAlgorithm {
         return this.array;
     }
 
-    private void doQuickSort(int[] array, int low, int high) {
-        if (low < high) {
-            int index = getIndex(array, low, high);
-            doQuickSort(array, low, index - 1);
-            doQuickSort(array, index + 1, high);
+    private void doQuickSort(int[] array, int left, int right) {
+        int i = left, j = right;
+        int pivot = median(array, left, right);
+
+        while (i <= j) {
+            while (array[i] < pivot) {
+                i++;
+            }
+            while (array[j] > pivot) {
+                j--;
+            }
+            if (i <= j) {
+                swapNumbers(array, i, j);
+                i++;
+                j--;
+            }
         }
+        if (left < j)
+            doQuickSort(array, left, j);
+        if (i < right)
+            doQuickSort(array, i, right);
     }
 
-    private int getIndex(int[] array, int lowIndex, int highIndex) {
-        int pivot = array[lowIndex];
+    private int median(int[] array, int left, int right) {
+        int center = (left + right) / 2;
 
-        while (lowIndex < highIndex) {
-            while (lowIndex < highIndex && array[highIndex] >= pivot) {
-                highIndex--;
-            }
-            array[lowIndex] = array[highIndex];
+        if (array[left] > array[center])
+            swapNumbers(array, left, center);
+        if (array[left] > array[right])
+            swapNumbers(array, left, right);
+        if (array[center] > array[right])
+            swapNumbers(array, center, right);
 
-            while (lowIndex < highIndex && array[lowIndex] <= pivot) {
-                lowIndex++;
-            }
-            array[highIndex] = array[lowIndex];
-        }
-        array[lowIndex] = pivot;
+        swapNumbers(array, center, right - 1);
+        return array[right - 1];
+    }
 
-        return lowIndex;
+    private void swapNumbers(int[] array, int index1, int index2) {
+        int tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
     }
 }
 ```
@@ -177,12 +193,12 @@ public class QuickSortTest {
 }
 ```
 
-测试通过。上面的快速排序算法选择第一个元素作为pivot，这是错误的实践。我们换一种更好的实践。使用左端、右端和中心位置上的三个元素的中值作为pivot。
+测试通过。上面的快速排序算法使用左端、右端和中心位置上的三个元素的中值作为pivot。这是比较好的实践。
 
 **参考文献**
 
-1. [Java Sorting Algorithms](http://www.java2novice.com/java-sorting-algorithms/)
+1. [数据结构与算法分析：Java语言描述](http://book.douban.com/subject/3351237/)
 
-2. [数据结构与算法分析：Java语言描述](http://book.douban.com/subject/3351237/)
+2. [排序算法](http://zh.wikipedia.org/wiki/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95)
 
 3. [Sorting Algorithm Animations](http://www.sorting-algorithms.com/)
