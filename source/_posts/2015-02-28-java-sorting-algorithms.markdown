@@ -195,6 +195,50 @@ public class QuickSortTest {
 
 测试通过。上面的快速排序算法使用左端、右端和中心位置上的三个元素的中值作为pivot。这是比较好的实践。
 
+###选择排序（Selection sort）
+
+是一种简单直观的排序算法，我觉得基本上是你面对排序问题时最先想到的方法。在未排序序列中找到最小或是最大的元素，存放到排序序列的起始位置；然后再从剩余的未排序的元素中继续寻找最小或是最大的元素。这样子持续进行下去，直到所有的元素排好顺序。往往最先想到的方法能解决问题，但是不能更好的解决问题。
+
+```java
+package com.boxing.algorithm;
+
+public class SelectionSort implements SortAlgorithm {
+    @Override
+    public int[] doSort(int[] array) {
+        int min;
+        for (int index = 0; index < array.length - 1; index++) {
+            min = index;
+            for (int temp = index + 1; temp < array.length; temp++) {
+                if (array[temp] < array[min]) min = temp;
+            }
+            swapNumbers(array, min, index);
+        }
+        return array;
+    }
+
+    private void swapNumbers(int[] array, int index1, int index2) {
+        int tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+    }
+}
+```
+
+```java
+public class SelectionSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new SelectionSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+```
+
+测试通过。
+
 **参考文献**
 
 1. [数据结构与算法分析：Java语言描述](http://book.douban.com/subject/3351237/)
