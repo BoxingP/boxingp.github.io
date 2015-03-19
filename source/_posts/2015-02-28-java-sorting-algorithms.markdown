@@ -12,42 +12,40 @@ categories:
 
 <!-- more -->
 
-###插入排序（Insertion sort）
+###选择排序（Selection sort）
 
-插入排序是最简单的排序算法。它每次排好最终结果数组的一个元素。
-
-它的一般原理是第p次时，将位置p上的元素向左移动，直到它在前p+1个元素中的正确位置被找到。
-
-![Insertion sort](/images/2015/insertion-sort.png)
+是一种简单直观的排序算法，我觉得基本上是你面对排序问题时最先想到的方法。在未排序序列中找到最小或是最大的元素，存放到排序序列的起始位置；然后再从剩余的未排序的元素中继续寻找最小或是最大的元素。这样子持续进行下去，直到所有的元素排好顺序。往往最先想到的方法能解决问题，但是不能更好的解决问题。
 
 ```java
 package com.boxing.algorithm;
 
-public class InsertionSort implements SortAlgorithm {
+public class SelectionSort implements SortAlgorithm {
     @Override
     public int[] doSort(int[] array) {
-        int temp;
-
-        for (int index = 1; index < array.length; index++) {
-            temp = array[index];
-            int i = index;
-            while (i > 0 && array[i - 1] > temp) {
-                array[i] = array[i - 1];
-                i--;
+        int min;
+        for (int index = 0; index < array.length - 1; index++) {
+            min = index;
+            for (int temp = index + 1; temp < array.length; temp++) {
+                if (array[temp] < array[min]) min = temp;
             }
-            array[i] = temp;
+            swapNumbers(array, min, index);
         }
-
         return array;
+    }
+
+    private void swapNumbers(int[] array, int index1, int index2) {
+        int tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
     }
 }
 ```
 
 ```java
-public class InsertionSortTest {
+public class SelectionSortTest {
     @Test
     public void shouldInputAnArray_return_sortedArray() {
-        SortAlgorithm sortAlgorithm = new InsertionSort();
+        SortAlgorithm sortAlgorithm = new SelectionSort();
         int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
         int[] outputArray = sortAlgorithm.doSort(inputArray);
 
@@ -98,6 +96,123 @@ public class BubbleSortTest {
     @Test
     public void shouldInputAnArray_return_sortedArray() {
         SortAlgorithm sortAlgorithm = new BubbleSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+```
+
+测试通过。
+
+###插入排序（Insertion sort）
+
+插入排序是最简单的排序算法。它每次排好最终结果数组的一个元素。
+
+它的一般原理是第p次时，将位置p上的元素向左移动，直到它在前p+1个元素中的正确位置被找到。
+
+![Insertion sort](/images/2015/insertion-sort.png)
+
+```java
+package com.boxing.algorithm;
+
+public class InsertionSort implements SortAlgorithm {
+    @Override
+    public int[] doSort(int[] array) {
+        int temp;
+
+        for (int index = 1; index < array.length; index++) {
+            temp = array[index];
+            int i = index;
+            while (i > 0 && array[i - 1] > temp) {
+                array[i] = array[i - 1];
+                i--;
+            }
+            array[i] = temp;
+        }
+
+        return array;
+    }
+}
+```
+
+```java
+public class InsertionSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new InsertionSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+```
+
+测试通过。
+
+###希尔排序（Shell sort）
+
+希尔排序是对插入排序的一种改进。
+
+插入排序有下面两个性质：
+
+- 插入排序在对几乎已经排好序的数据进行操作时，效率很高。
+
+- 插入排序是低效的，因为它每次只能将数据移动一位。
+
+希尔排序通过比较相距一定间隔的元素来工作，每次排序比较所用的距离随着算法的进行而减小，直到只比较相邻元素的最后一次排序为止。这样一个所用距离的序列叫做增量序列（increment sequence）。
+
+也就是对于这样的一组数：{ 13, 14, 94, 33, 82, 25, 59, 94, 65, 23, 45, 27, 73, 25, 39, 10 }，如果我们以距离5开始进行排序，它们看起来是这样的：
+
+{% img /images/2015/shell-sort-5.png 400 300 %}
+
+也就是说对每列进行了排序，得到了数组{ 10, 14, 73, 25, 23, 13, 27, 94, 33, 39, 25, 59, 94, 65, 82, 45 }，可以发现，此时10已经到了正确的位置上。再以距离3对数组进行排序：
+
+{% img /images/2015/shell-sort-3.png 400 300 %}
+
+最后以距离1进行排序，也就是简单的插入排序了。
+
+目前已知最好的增量序列是Sedgewick提出的，{ 1, 5, 19, 41, 109, … }，该序列中的项要么是\(9×4^i-9×2^i+1\)，要么是\(4^i-3×2^i+1\)。
+
+```java
+package com.boxing.algorithm;
+
+public class ShellSort implements SortAlgorithm {
+    @Override
+    public int[] doSort(int[] array) {
+        int gap = 1;
+        while (gap < array.length / 3) {
+            gap = gap * 3 + 1;
+        }
+
+        for (; gap >= 1; gap /= 3) {
+            for (int k = 0; k < gap; k++) {
+                for (int i = gap + k; i < array.length; i += gap) {
+                    for (int j = i; j >= gap && array[j] < array[j - gap]; j -= gap) {
+                        swapNumbers(array, j, j - gap);
+                    }
+                }
+            }
+        }
+
+        return array;
+    }
+
+    private void swapNumbers(int[] array, int index1, int index2) {
+        int tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+    }
+}
+```
+
+```java
+public class ShellSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new ShellSort();
         int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
         int[] outputArray = sortAlgorithm.doSort(inputArray);
 
@@ -195,49 +310,9 @@ public class QuickSortTest {
 
 测试通过。上面的快速排序算法使用左端、右端和中心位置上的三个元素的中值作为pivot。这是比较好的实践。
 
-###选择排序（Selection sort）
+###算法代码repo
 
-是一种简单直观的排序算法，我觉得基本上是你面对排序问题时最先想到的方法。在未排序序列中找到最小或是最大的元素，存放到排序序列的起始位置；然后再从剩余的未排序的元素中继续寻找最小或是最大的元素。这样子持续进行下去，直到所有的元素排好顺序。往往最先想到的方法能解决问题，但是不能更好的解决问题。
-
-```java
-package com.boxing.algorithm;
-
-public class SelectionSort implements SortAlgorithm {
-    @Override
-    public int[] doSort(int[] array) {
-        int min;
-        for (int index = 0; index < array.length - 1; index++) {
-            min = index;
-            for (int temp = index + 1; temp < array.length; temp++) {
-                if (array[temp] < array[min]) min = temp;
-            }
-            swapNumbers(array, min, index);
-        }
-        return array;
-    }
-
-    private void swapNumbers(int[] array, int index1, int index2) {
-        int tmp = array[index1];
-        array[index1] = array[index2];
-        array[index2] = tmp;
-    }
-}
-```
-
-```java
-public class SelectionSortTest {
-    @Test
-    public void shouldInputAnArray_return_sortedArray() {
-        SortAlgorithm sortAlgorithm = new SelectionSort();
-        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
-        int[] outputArray = sortAlgorithm.doSort(inputArray);
-
-        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
-    }
-}
-```
-
-测试通过。
+“[戳我戳我戳我~(≧▽≦)/~](https://github.com/BoxingP/sort_algorithm)”
 
 **参考文献**
 
