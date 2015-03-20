@@ -223,6 +223,93 @@ public class ShellSortTest {
 
 测试通过。
 
+###归并排序（Merge sort）
+
+这个算法中基本的操作是把两个已排序的序列合并成一个序列。
+
+归并的操作过程为：
+
+1. 创建一个空序列，使其大小为两个已排序的序列之和；
+
+2. 设定两个计数器，最初的位置分别为两个已经排序序列的起始位置；
+
+3. 比较两个计数器处元素的大小，选择相对小的元素放入空序列中，对应的计数器向前推进一步；
+
+4. 重复步骤3直到某一计数器到达序列尾；
+
+5. 将另一序列中剩下的所有元素复制到空序列中。
+
+{% img /images/2015/merge-sort.png %}
+
+该算法是经典的分治（divide-and-conquer）策略，它将问题（divide）成一些小的问题然后递归求解，而治（conquer）的阶段则将分的阶段解得的各答案修补在一起。
+
+```java
+package com.boxing.algorithm;
+
+public class MergeSort implements SortAlgorithm {
+    private int[] array;
+    private int[] helper;
+
+    @Override
+    public int[] doSort(int[] array) {
+        this.array = array;
+        this.helper = new int[array.length];
+        mergeSort(0, array.length - 1);
+        return this.array;
+    }
+
+    private void mergeSort(int low, int high) {
+        if (low < high) {
+            int middle = low + (high - low) / 2;
+
+            mergeSort(low, middle);
+            mergeSort(middle + 1, high);
+            merge(low, middle, high);
+        }
+    }
+
+    private void merge(int low, int middle, int high) {
+        System.arraycopy(array, low, helper, low, high + 1 - low);
+
+        int i = low;
+        int j = middle + 1;
+        int k = low;
+
+        while (i <= middle && j <= high) {
+            if (helper[i] <= helper[j]) {
+                array[k] = helper[i];
+                i++;
+            } else {
+                array[k] = helper[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i <= middle) {
+            array[k] = helper[i];
+            k++;
+            i++;
+        }
+    }
+}
+```
+
+```java
+public class MergeSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new MergeSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+```
+
+测试通过。
+
 ###快速排序（Quick sort）
 
 快速排序是实践中一种快速的排序算法。它是一种分治的递归算法。它首先把一个大的数组分成两个小的子数组：较小的数的数组和较大的数的数组。再对这子数组做递归处理。
