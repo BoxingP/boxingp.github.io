@@ -111,7 +111,7 @@ CNNIC的做事风格[^4]：
 
 - 点击左栏的`System Roots`
 
-- 找到`CNNIC ROOT`双击
+- 找到`China Internet Network Information Center`和`CNNIC ROOT`双击
 
 - 点击`Trust`，将属性全部改为`Never Trust`
 
@@ -127,9 +127,21 @@ CNNIC的做事风格[^4]：
 
 - `Ctrl+V`粘贴
 
+###Firefox
+
+Firefox的的证书体系是独立于操作系统的，所以在吊销了系统的证书后，还需要吊销它的证书：
+
+- `⌘+,`打开`Preferences`
+
+- 切换到`Advanced`，点击`Certificates`，点击`View Certificates`
+
+- 切换到`Authorities`
+
+- 里面的证书列表是按字母排序的，将`China Internet Network Information Center`和`CNNIC`之类的`Edit Trust`全部清空。
+
 ###全自动可疑证书吊销工具
 
-Github上的[RevokeChinaCerts](https://github.com/chengr28/RevokeChinaCerts)项目，可以按照步骤手动吊销。
+这个是最方便的方法了，Github上的[RevokeChinaCerts](https://github.com/chengr28/RevokeChinaCerts)项目，可以按照步骤手动吊销。
 
 ###检验方法
 
@@ -141,7 +153,7 @@ Github上的[RevokeChinaCerts](https://github.com/chengr28/RevokeChinaCerts)项�
 
 去年第一次知道关于CNNIC证书零零散散的事迹，当时就听到“如果利用证书建立虚假网站构建大局域网该怎么办”的担忧，于是迅速的ban掉了CNNIC证书。
 
-知乎上有一个问题[“CNNIC 证书值得信任吗？”](http://www.zhihu.com/question/20746900)，现在被删除了。下面有一条答案是这样的：
+知乎现在删除了大量有关CNNIC的讨论，曾经有一个问题[“CNNIC 证书值得信任吗？”](http://www.zhihu.com/question/20746900)，下面有一条回答是这样的：
 
 {% img /images/2015/hit_face.jpg %}
 
