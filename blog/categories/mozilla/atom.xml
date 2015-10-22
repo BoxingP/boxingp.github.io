@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mozilla | Rain-driven Development]]></title>
+  <link href="http://boxingp.github.io/blog/categories/mozilla/atom.xml" rel="self"/>
+  <link href="http://boxingp.github.io/"/>
+  <updated>2015-10-23T03:30:41+08:00</updated>
+  <id>http://boxingp.github.io/</id>
+  <author>
+    <name><![CDATA[Boxing]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[CNNIC证书值得信任吗？]]></title>
+    <link href="http://boxingp.github.io/blog/2015/04/04/should-cnnic-certificate-to-be-trusted/"/>
+    <updated>2015-04-04T18:33:59+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/04/04/should-cnnic-certificate-to-be-trusted</id>
+    <content type="html"><![CDATA[<p>要回答这个问题，我们可以按照<code>What → Why → How</code>的学习顺序来得到答案。</p>
+
+<!-- more -->
+
+
+<h1>What</h1>
+
+<h3>CNNIC是什么<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></h3>
+
+<p>CNNIC是中国互联网络信息中心<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>（China Internet Network Information Center）的缩写，是经中华人民共和国国务院主管部门批准，于1997年6月3日成立的互联网管理和服务机构。中国互联网络信息中心成立伊始，由中国科学院主管；2014年末，改由<a href="http://en.wikipedia.org/wiki/Central_Leading_Group_for_Internet_Security_and_Informatization">中央网络安全和信息化领导小组</a>办公室、国家互联网信息办公室主管。</p>
+
+<p>在很多场合，中国互联网信息中心都代表中华人民共和国政府行使相应的职权。</p>
+
+<h4>职责</h4>
+
+<ul>
+<li><p>担当“国家级的互联网络信息中心”之职</p></li>
+<li><p>作为中国的顶级域名<code>.cn</code>和中文域名注册管理机构</p></li>
+<li><p>运行、管理域名系统，维护域名数据库</p></li>
+<li><p>选择域名注册服务机构</p></li>
+<li><p>监督、管理域名注册服务机构的域名注册服务</p></li>
+<li><p>代表中国大陆各互联网络单位，与世界上其他互联网络信息中心，作业务联系</p></li>
+</ul>
+
+
+<h4>工作</h4>
+
+<ul>
+<li><p>发布《中国互联网络发展状况统计报告》</p></li>
+<li><p>规范域名注册服务</p></li>
+</ul>
+
+
+<h4>运行及管理</h4>
+
+<ul>
+<li><p>它的运行和管理工作，由中国科学院计算机网络信息中心承担</p></li>
+<li><p>它在业务上受<a href="http://en.wikipedia.org/wiki/Ministry_of_Industry_and_Information_Technology_of_the_People%27s_Republic_of_China">工业和信息化部</a>领导</p></li>
+<li><p>它在行政上受中央网络安全和信息化领导小组办公室、国家互联网信息办公室领导</p></li>
+</ul>
+
+
+<h3>CA</h3>
+
+<p>CA是数字证书认证机构（Certificate Authority）的缩写。它是负责发放和管理数字证书的权威机构，并作为电子商务交易中受信任的第三方，承担公钥体系中公钥的合法性检验的责任。</p>
+
+<h3>数字证书</h3>
+
+<p>数字证书为实现双方安全通信提供电子认证。它的原理是当在认定一个人身份时，是通过信任的另外一个人来进行的，即CA。</p>
+
+<p>证书之间也存在着信任关系，是可以嵌套的。只要信任链上的第一个证书，那后续的证书都可以被信任。</p>
+
+<p>证书之间构成一个树形关系，证书都要依靠上一级的证书来证明自己，而处于最顶上树根位置的根证书（Root Certificate）是不需要被证明。一旦根证书出了问题，后果是相当严重的。</p>
+
+<h3>HTTPS</h3>
+
+<p>HTTPS是超文本传输安全协议（Hypertext Transfer Protocol Secure）的缩写，是超文本传输协议和SSL/TLS的组合。它的主要思想是在不安全的网络上创建一安全信道，并在使用适当的加密套件和服务器证书被验证且被信任的情况下，对窃听和中间人攻击提供合理的防护。</p>
+
+<p>HTTPS的信任是建立在数字证书认证机构发放的数字证书上的。</p>
+
+<h3>中间人攻击<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></h3>
+
+<p>在密码学和计算机安全领域中，中间人攻击（Man-in-the-middle attack，通常缩写为MITM）是指攻击者与通讯的两端分别创建独立的联系，并交换其所收到的数据，使通讯的两端认为他们正在通过一个私密的连接与对方直接对话，但事实上整个会话都被攻击者完全控制。在中间人攻击中，攻击者可以拦截通讯双方的通话并插入新的内容。</p>
+
+<h1>Why</h1>
+
+<p>正常情况下，访问一个网站是这样的：</p>
+
+<p><img src="/images/2015/true_website.png" width="500" height="500"></p>
+
+<p>一个安全的访问，没有受到监听。</p>
+
+<p>然而愿望是美好的，现实是残酷的。如果伪造的证书来自CA，那么在一个网站被DNS劫持的同时，伪造的网站又提供了一个来自CA的证书，这时浏览器依旧认为这次访问是安全的，而用户就会被监听：</p>
+
+<p><img src="/images/2015/fake_website.png" width="500" height="500"></p>
+
+<p>CNNIC证书就是这样的一个证书，当你和一个网站建立安全连接时，如果使用的证书是CNNIC证书，浏览器会默认这个连接是安全的。</p>
+
+<p>CNNIC的做事风格<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup>：</p>
+
+<ul>
+<li><p>CNNIC制作的上网辅助软件“中文上网官方版软件”，由于其强制安装和无法彻底卸载，一度被北京市网络行业协会列入10款流氓软件名单并勒令整改<sup id="fnref:5"><a href="#fn:5" rel="footnote">5</a></sup>。为此，CNNIC起诉把它列为流氓软件的殺毒软件制作者<sup id="fnref:6"><a href="#fn:6" rel="footnote">6</a></sup>。</p></li>
+<li><p>2009年12月9日，CNNIC被中国中央电视台曝光对<code>.cn</code>域名管理不善，致使色情网站可以轻而易举的更换域名<sup id="fnref:7"><a href="#fn:7" rel="footnote">7</a></sup>。12月11日晚，CNNIC发出公告<sup id="fnref:8"><a href="#fn:8" rel="footnote">8</a></sup>，公告暗指从2009年12月14日9时起，禁止个人注册<code>.cn</code>域名<sup id="fnref:9"><a href="#fn:9" rel="footnote">9</a></sup>。2010年1月底，CNNIC要求所有<code>.cn</code>域名提交个人身份证复印件，由于没有出台适当的隐私保护条例，遭<code>.cn</code>域名持有者抵制，不得已将个人身份证信息提交的最后的期限推迟到3月15日。但是提交信息的并不多。</p></li>
+</ul>
+
+
+<p>最近，Google发现CNNIC颁发了多个针对Google域名的用于中间人攻击的证书<sup id="fnref:10"><a href="#fn:10" rel="footnote">10</a></sup>。这个名为MCS集团的中级证书颁发机构发行了多个Google域名的假证书，而MCS集团的中级证书则来自中国的CNNIC。该证书冒充成受信任的Google的域名，被用于部署到网络防火墙中，用于劫持所有处于该防火墙后的HTTPS网络通信，而绕过浏览器警告。</p>
+
+<p>根据最新的消息，Google和Mozilla已经决定在Chrome和Firefox中禁用CNNIC的证书<sup id="fnref:11"><a href="#fn:11" rel="footnote">11</a></sup>。</p>
+
+<p>如维基百科上所说：</p>
+
+<blockquote><p>这件事情再次显示，互联网证书颁发机制公开透明的必要性。</p></blockquote>
+
+<h1>How</h1>
+
+<p>如何吊销CNNIC证书<sup id="fnref:12"><a href="#fn:12" rel="footnote">12</a></sup>：</p>
+
+<h3>OS X</h3>
+
+<ul>
+<li><p>打开<code>Keychain Access</code></p></li>
+<li><p>点击左栏的<code>System Roots</code></p></li>
+<li><p>找到<code>China Internet Network Information Center</code>和<code>CNNIC ROOT</code>双击</p></li>
+<li><p>点击<code>Trust</code>，将属性全部改为<code>Never Trust</code></p></li>
+</ul>
+
+
+<h3>Windows</h3>
+
+<ul>
+<li><p><code>Win+R</code>运行<code>certlm.msc</code></p></li>
+<li><p>在左栏的<code>Trusted Root Certification Authorities</code>中的<code>Certificates</code>，找到<code>CNNIC ROOT</code></p></li>
+<li><p><code>Ctrl+C</code>复制</p></li>
+<li><p>找到左栏的<code>Untrusted Certificates</code></p></li>
+<li><p><code>Ctrl+V</code>粘贴</p></li>
+</ul>
+
+
+<h3>Firefox</h3>
+
+<p>Firefox的的证书体系是独立于操作系统的，所以在吊销了系统的证书后，还需要吊销它的证书：</p>
+
+<ul>
+<li><p><code>⌘+,</code>打开<code>Preferences</code></p></li>
+<li><p>切换到<code>Advanced</code>，点击<code>Certificates</code>，点击<code>View Certificates</code></p></li>
+<li><p>切换到<code>Authorities</code></p></li>
+<li><p>里面的证书列表是按字母排序的，将<code>China Internet Network Information Center</code>和<code>CNNIC</code>之类的<code>Edit Trust</code>全部清空。</p></li>
+</ul>
+
+
+<h3>全自动可疑证书吊销工具</h3>
+
+<p>这个是最方便的方法了，Github上的<a href="https://github.com/chengr28/RevokeChinaCerts">RevokeChinaCerts</a>项目，可以按照步骤手动吊销。</p>
+
+<h3>检验方法</h3>
+
+<p>打开<a href="https://www1.cnnic.cn/">https://www1.cnnic.cn/</a>，请注意该链接是HTTPS，如果显示不安全，就表明操作成功：</p>
+
+<p><img src="/images/2015/your_connection_is_not_private.png"></p>
+
+<h2>题外话</h2>
+
+<p>去年第一次知道关于CNNIC证书零零散散的事迹，当时就听到“如果利用证书建立虚假网站构建大局域网该怎么办”的担忧，于是迅速的ban掉了CNNIC证书。</p>
+
+<p>知乎现在删除了大量有关CNNIC的讨论，曾经有一个问题<a href="http://www.zhihu.com/question/20746900">“CNNIC 证书值得信任吗？”</a>，下面有一条回答是这样的：</p>
+
+<p><img src="/images/2015/hit_face.jpg"></p>
+
+<p>脸打的好疼。</p>
+
+<h2>参考资料</h2>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p><a href="http://en.wikipedia.org/wiki/China_Internet_Network_Information_Center">China Internet Network Information Center</a><a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p><a href="http://www.cnnic.net.cn/">中国互联网络信息中心</a><a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p><a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">中间人攻击</a><a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+<li id="fn:4">
+<p><a href="http://program-think.blogspot.com/2010/02/about-cnnic.html">CNNIC 干过的那些破事儿</a><a href="#fnref:4" rev="footnote">&#8617;</a></p></li>
+<li id="fn:5">
+<p><a href="http://www.pconline.com.cn/pcedu/soft/virus/da/0507/662204.html">十大流氓软件被勒令整改：3721居首位</a><a href="#fnref:5" rev="footnote">&#8617;</a></p></li>
+<li id="fn:6">
+<p><a href="http://news.ccidnet.com/art/1032/20070124/1008413_1.html">CNNIC正式起诉奇虎 奇虎列举CNNIC七大罪状</a><a href="#fnref:6" rev="footnote">&#8617;</a></p></li>
+<li id="fn:7">
+<p><a href="http://space.tv.cctv.com/article/ARTI1260361552288770">焦点访谈 失控的域名——聚焦手机网络色情（六）（2009.12.09）</a><a href="#fnref:7" rev="footnote">&#8617;</a></p></li>
+<li id="fn:8">
+<p><a href="https://www.cnnic.net.cn/html/Dir/2009/12/11/5749.htm">关于进一步加强域名注册信息审核工作的公告</a><a href="#fnref:8" rev="footnote">&#8617;</a></p></li>
+<li id="fn:9">
+<p><a href="http://www.donews.com/Content/200912/6b5cd17b47284dea8526eb55e7dd5360.shtm">CNNIC再发整治公告 暗指禁止个人注册CN域名</a><a href="#fnref:9" rev="footnote">&#8617;</a></p></li>
+<li id="fn:10">
+<p><a href="http://googleonlinesecurity.blogspot.com/2015/03/maintaining-digital-certificate-security.html">Maintaining digital certificate security</a><a href="#fnref:10" rev="footnote">&#8617;</a></p></li>
+<li id="fn:11">
+<p><a href="https://blog.mozilla.org/security/2015/04/02/distrusting-new-cnnic-certificates/">Distrusting New CNNIC Certificates</a><a href="#fnref:11" rev="footnote">&#8617;</a></p></li>
+<li id="fn:12">
+<p><a href="http://program-think.blogspot.com/2010/02/remove-cnnic-cert.html">CNNIC 证书的危害及各种清除方法</a><a href="#fnref:12" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

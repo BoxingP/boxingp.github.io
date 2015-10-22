@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Javascript | Rain-driven Development]]></title>
+  <link href="http://boxingp.github.io/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://boxingp.github.io/"/>
+  <updated>2015-10-23T03:30:41+08:00</updated>
+  <id>http://boxingp.github.io/</id>
+  <author>
+    <name><![CDATA[Boxing]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Truthy和Falsy：在JavaScript中进行比较时可能会遇到的陷阱]]></title>
+    <link href="http://boxingp.github.io/blog/2015/01/28/javascript-pitfalls-using-comparison/"/>
+    <updated>2015-01-28T17:15:31+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/01/28/javascript-pitfalls-using-comparison</id>
+    <content type="html"><![CDATA[<p>和大多数的计算机语言一样，JavaScript支持Boolean数据类型。但需要多说一句的是，JavaScript有自己的内在Boolean值，truthy和falsy。处理truthy和falsy值可能会遇到一些陷阱，尤其是和变量进行比较时。理解这些古怪的规则可以在debug时给我们很大的帮助。</p>
+
+<p><img src="/images/2015/js-truthy-falsy.png" alt="Truthy&amp;Falsy" /></p>
+
+<!-- more -->
+
+
+<h3>Truthy和Falsy值</h3>
+
+<p>下列值是falsy：</p>
+
+<ul>
+<li><code>false</code></li>
+<li><code>0</code></li>
+<li><code>""</code></li>
+<li><code>null</code></li>
+<li><code>undefined</code></li>
+<li><code>NaN</code></li>
+</ul>
+
+
+<p>其他所有的值都是truthy，包括<code>"0"</code>，<code>"false"</code>，空的function，空的array，空的object。</p>
+
+<h3>比较运算符</h3>
+
+<p>比较运算符：<code>==</code></p>
+
+<p>判断value是否相等，忽略type。</p>
+
+<p>比较运算符：<code>===</code></p>
+
+<p>判断value和type是否相等。如果可以的话尽可能使用该运算符，使用<code>==</code>可能会导致某些逻辑错误。</p>
+
+<h3>进行比较时可能会遇到的陷阱</h3>
+
+<p><strong>false</strong>，<strong>0</strong>和<strong>&ldquo;"（空string）</strong>在比较时被当作相等的。因此尽可能使用<code>===</code>。</p>
+
+<pre><code class="js">typeof(false);
+"boolean"
+typeof(0);
+"number"
+typeof("");
+"string"
+
+0 == false;
+true
+0 === false;
+false
+0 === true;
+false
+
+"" == false;
+true
+"" === false;
+false
+"" === true;
+false
+
+0 == "";
+true
+0 === "";
+false
+</code></pre>
+
+<p><strong>null</strong>和<strong>undefined</strong>在比较时被当作相等，和其他值不相等。如果一个变量没有被声明或被定义（例如一个argument被指向一个不会返回任何值的function，一个对象没有被分配值），那么这个变量会被赋予一个特殊值：undefined。因此尽可能使用<code>===</code>。</p>
+
+<pre><code class="js">typeof(null)
+"object"
+typeof(undefined)
+"undefined" //as a string
+
+null == false;
+false
+null === false;
+false
+null == true;
+false
+null === true;
+false
+
+undefined == false;
+false
+undefined === false;
+false
+undefined == true;
+false
+undefined === true;
+false
+
+null == undefined;
+true
+null === undefined;
+false
+</code></pre>
+
+<p><strong>NaN</strong>是一个特殊的数字值，意思是Not-a-Number，是算数运算产生invalid结果导致的。和任何值都不相等。尽可能使用<strong>isNaN()</strong>判断是否为<strong>NaN</strong>。</p>
+
+<pre><code class="js">var x = 0/0;
+
+x;
+NaN
+
+typeof(NaN);
+"number"
+
+isNaN(NaN);
+true
+</code></pre>
+
+<p><strong>注意</strong>：NaN不等于它自己！</p>
+
+<pre><code class="js">
+NaN == NaN;
+false
+NaN === NaN;
+false
+</code></pre>
+
+<p><del>啊，吃我一记大坑</del> 知道这些陷阱可以有效提高工作效率。</p>
+
+<p><strong>参考文献</strong></p>
+
+<p><a href="http://www.sitepoint.com/javascript-truthy-falsy/">Truthy and Falsy: When All is Not Equal in JavaScript</a></p>
+]]></content>
+  </entry>
+  
+</feed>

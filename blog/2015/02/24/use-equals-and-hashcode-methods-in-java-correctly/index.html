@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>在Java中正确地使用equals()和hashCode()方法 - Rain-driven Development</title>
+  <meta name="author" content="Boxing">
+
+  
+  <meta name="description" content="最近在用Java写一个跟购物有关的小程序。写测试的时候遇到了判断两个对象是否相等的问题。看了些资料，说一下自己对equals()和hashCode()这两个方法的理解。 在Object类中定义了equals()和hashCode()这两个方法。Object类是类继承结构的基础，所以是每一个类的父类 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://boxingp.github.io/blog/2015/02/24/use-equals-and-hashcode-methods-in-java-correctly">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Rain-driven Development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58940494-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Rain-driven Development</a></h1>
+  
+    <h2>雨驱动开发</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="boxingp.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">在Java中正确地使用equals()和hashCode()方法</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-24T15:20:34+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:20 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近在用Java写一个跟购物有关的小程序。写测试的时候遇到了判断两个对象是否相等的问题。看了些资料，说一下自己对<code>equals()</code>和<code>hashCode()</code>这两个方法的理解。</p>
+
+<!-- more -->
+
+
+<p>在<code>Object</code>类中定义了<code>equals()</code>和<code>hashCode()</code>这两个方法。<code>Object</code>类是类继承结构的基础，所以是每一个类的父类。所有的对象，包括数组，都实现了在<code>Object</code>类中定义的方法。</p>
+
+<h3><strong>equals</strong></h3>
+
+<p><code>equals()</code>方法是用来判断其他的对象是否和该对象相等，它的性质有：</p>
+
+<ul>
+<li><p>自反性（reflexive）。对于任意不为<code>null</code>的引用值x，<code>x.equals(x)</code>一定是<code>true</code>。</p></li>
+<li><p>对称性（symmetric）。对于任意不为<code>null</code>的引用值<code>x</code>和<code>y</code>，当且仅当<code>x.equals(y)</code>是<code>true</code>时，<code>y.equals(x)</code>也是<code>true</code>。</p></li>
+<li><p>传递性（transitive）。对于任意不为<code>null</code>的引用值<code>x</code>、<code>y</code>和<code>z</code>，如果<code>x.equals(y)</code>是<code>true</code>，同时<code>y.equals(z)</code>是<code>true</code>，那么<code>x.equals(z)</code>一定是<code>true</code>。</p></li>
+<li><p>一致性（consistent）。对于任意不为<code>null</code>的引用值<code>x</code>和<code>y</code>，如果用于equals比较的对象信息没有被修改的话，多次调用时<code>x.equals(y)</code>要么一致地返回<code>true</code>要么一致地返回<code>false</code>。</p></li>
+<li><p>对于任意不为<code>null</code>的引用值<code>x</code>，<code>x.equals(null)</code>返回<code>false</code>。</p></li>
+</ul>
+
+
+<p>对于<code>Object</code>类来说，<code>equals()</code>方法在对象上实现的是差别可能性最大的等价关系，即，对于任意非<code>null</code>的引用值<code>x</code>和<code>y</code>，当且仅当<code>x</code>和<code>y</code>引用的是同一个对象，该方法才会返回<code>true</code>。</p>
+
+<p>需要注意的是当<code>equals()</code>方法被override时，<code>hashCode()</code>也要被override。按照一般<code>hashCode()</code>方法的实现来说，相等的对象，它们的hash code一定相等。</p>
+
+<h3><strong>hashCode</strong></h3>
+
+<p><code>hashCode()</code>方法给对象返回一个hash code值。这个方法被用于hash tables，例如HashMap。</p>
+
+<p>它的性质是：</p>
+
+<ul>
+<li><p>在一个Java应用的执行期间，如果一个对象提供给equals做比较的信息没有被修改的话，该对象多次调用<code>hashCode()</code>方法，该方法必须始终如一返回同一个integer。</p></li>
+<li><p>如果两个对象根据<code>equals(Object)</code>方法是相等的，那么调用二者各自的<code>hashCode()</code>方法必须产生同一个integer结果。</p></li>
+<li><p>并不要求根据<code>equals(java.lang.Object)</code>方法不相等的两个对象，调用二者各自的<code>hashCode()</code>方法必须产生不同的integer结果。然而，程序员应该意识到对于不同的对象产生不同的integer结果，有可能会提高hash table的性能。</p></li>
+</ul>
+
+
+<p>大量的实践表明，由<code>Object</code>类定义的<code>hashCode()</code>方法对于不同的对象返回不同的integer。</p>
+
+<p>来看一个例子。创建一个<code>Book</code>类：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Book</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">author</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Book</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">author</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">author</span> <span class="o">=</span> <span class="n">author</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Book</code>类有两个非常基础的属性：书名<code>name</code>和作者<code>author</code>。现在，来比较两本书：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BookTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldTwoBookWithSameNameAuthor_return_equal</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Book</span> <span class="n">oneBook</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Book</span><span class="o">(</span><span class="s">&quot;A Book&quot;</span><span class="o">,</span> <span class="s">&quot;Jim&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Book</span> <span class="n">anotherBook</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Book</span><span class="o">(</span><span class="s">&quot;A Book&quot;</span><span class="o">,</span> <span class="s">&quot;Jim&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="n">oneBook</span><span class="o">,</span> <span class="n">anotherBook</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>测试没有通过。虽然两本书有着同样的书名和作者，但是它们是两本“不同”的书。</p>
+
+<h3><strong>关于改写</strong></h3>
+
+<p>改写<code>equals()</code>方法看起来非常简单，但是有许多改写的方式会导致错误，并且后果非常严重。要避免问题最重要的办法是不改写<code>equals()</code>方法。</p>
+
+<p>那么什么时候应该改写<code>Object.equals</code>呢？当一个类有自己特有的“逻辑相等”概念（不同于对象身份的概念），而且超类也没有改写<code>equals()</code>以实现期望的行为，这时需要改写<code>equals()</code>方法。这通常适合于<a href="http://martinfowler.com/bliki/ValueObject.html">value object</a>。</p>
+
+<p>再说一遍，在每个改写了<code>equals()</code>方法的类中，必须要改写<code>hashCode()</code>方法。如果不这样做，就会违反<code>Object.hashCode</code>的通用约定，从而导致该类无法与所有基于hash的集合类结合在一起正常运作，这样的集合类包括HashMap、HashSet和HashTable。</p>
+
+<p>需要注意的是</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个<code>hashCode()</code>方法是合法的，因为相等的对象总是具有同样的散列码。但是它使得每一个对象都具有同样的散列码。因此，每个对象都被映射到同一个散列桶中，从而散列表被退化为链表。对于规模很大的散列表而言，这关系到散列表能否正常工作。</p>
+
+<p>一个好的散列函数通常倾向于“为不相等的对象产生不相等的散列码”。</p>
+
+<p>如果一个类是非可变的，并且计算散列码的代价也比较大，那么你应该考虑把散列码缓存在对象内部，而不是每次请求的时候都重新计算散列码。</p>
+
+<p>不要试图从散列码计算中排除掉一个对象的关键部分以提高性能。</p>
+
+<p>我使用的是IntelliJ，使用<code>^</code>＋<code>N</code>快捷键可以很好的override<code>equals()</code>和<code>hashCode()</code>方法：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Book</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">author</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Book</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">author</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">author</span> <span class="o">=</span> <span class="n">author</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Book</span> <span class="n">book</span> <span class="o">=</span> <span class="o">(</span><span class="n">Book</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">author</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="o">!</span><span class="n">author</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">book</span><span class="o">.</span><span class="na">author</span><span class="o">)</span> <span class="o">:</span> <span class="n">book</span><span class="o">.</span><span class="na">author</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="o">!</span><span class="n">name</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">book</span><span class="o">.</span><span class="na">name</span><span class="o">)</span> <span class="o">:</span> <span class="n">book</span><span class="o">.</span><span class="na">name</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">name</span><span class="o">.</span><span class="na">hashCode</span><span class="o">()</span> <span class="o">:</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="mi">31</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="o">(</span><span class="n">author</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">author</span><span class="o">.</span><span class="na">hashCode</span><span class="o">()</span> <span class="o">:</span> <span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个时候再跑前面的测试就会发现测试通过了。</p>
+
+<p>那么如果我没有override<code>hashCode()</code>会发生什么呢？</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Book</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">author</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Book</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">author</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">author</span> <span class="o">=</span> <span class="n">author</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Book</span> <span class="n">book</span> <span class="o">=</span> <span class="o">(</span><span class="n">Book</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">author</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="o">!</span><span class="n">author</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">book</span><span class="o">.</span><span class="na">author</span><span class="o">)</span> <span class="o">:</span> <span class="n">book</span><span class="o">.</span><span class="na">author</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="o">!</span><span class="n">name</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">book</span><span class="o">.</span><span class="na">name</span><span class="o">)</span> <span class="o">:</span> <span class="n">book</span><span class="o">.</span><span class="na">name</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个时候你会发现之前的测试依然通过，但是如果换一下测试：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BookTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldSearchWithSameBook_return_correctBorrowPeople</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Book</span> <span class="n">oneBook</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Book</span><span class="o">(</span><span class="s">&quot;A Book&quot;</span><span class="o">,</span> <span class="s">&quot;Jim&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Book</span> <span class="n">antherBook</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Book</span><span class="o">(</span><span class="s">&quot;A Book&quot;</span><span class="o">,</span> <span class="s">&quot;Jim&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Book</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">borrowMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Book</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="n">borrowMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">oneBook</span><span class="o">,</span> <span class="s">&quot;Li Lei&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">borrowMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">antherBook</span><span class="o">),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;Li Lei&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>逻辑上，我用相同的书在借书表里查询，应该返回对应的人名。但是这条测试并没有通过，事实上返回的是<code>null</code>。因为没有改写<code>hashCode()</code>方法，从而导致两个相等的实例具有不相等的散列码，违反了<code>hashCode()</code>的规定。<code>put()</code>方法把LiLei借出的书对象存放在一个散列桶中，<code>get()</code>方法会在另一个散列桶中查找LiLei所借的书对象，返回<code>null</code>也就不出意外了。要想修正，只要提供适当的<code>hashCode()</code>方法就可以了。</p>
+
+<p><strong>参考文献:</strong></p>
+
+<ol>
+<li><a href="http://www.oschina.net/question/82993_75533">Java中正确使用hashCode和equals方法</a></li>
+<li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html">Class Object</a></li>
+<li><a href="http://book.douban.com/subject/1103015/">Effective Java 中文版</a></li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Boxing
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-24T15:20:34+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:20 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/02/the-clean-coder-reading-notes/" title="Previous Post: 《程序员的职业素养》读书笔记">&laquo; 《程序员的职业素养》读书笔记</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/26/use-git-daemon-to-share-git-repository/" title="Next Post: 使用git daemon来分享Git Repository">使用git daemon来分享Git Repository &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Boxing -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'raindrivendevelopment';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://boxingp.github.io/blog/2015/02/24/use-equals-and-hashcode-methods-in-java-correctly/';
+        var disqus_url = 'http://boxingp.github.io/blog/2015/02/24/use-equals-and-hashcode-methods-in-java-correctly/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="http://arrow.scrolltotop.com/arrow86.js"></script>
+<noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+</body>
+</html>

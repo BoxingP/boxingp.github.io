@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Java | Rain-driven Development]]></title>
+  <link href="http://boxingp.github.io/blog/categories/java/atom.xml" rel="self"/>
+  <link href="http://boxingp.github.io/"/>
+  <updated>2015-10-23T03:30:41+08:00</updated>
+  <id>http://boxingp.github.io/</id>
+  <author>
+    <name><![CDATA[Boxing]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[一些排序算法的Java实现]]></title>
+    <link href="http://boxingp.github.io/blog/2015/02/28/java-sorting-algorithms/"/>
+    <updated>2015-02-28T23:33:52+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/02/28/java-sorting-algorithms</id>
+    <content type="html"><![CDATA[<p>最近在<del>学习</del>复习《数据结构与算法分析》，对一些典型的排序算法自己用Java实现，在这个练习的过程中加深对算法的了解。</p>
+
+<!-- more -->
+
+
+<h3>选择排序（Selection sort）</h3>
+
+<p>是一种简单直观的排序算法，我觉得基本上是你面对排序问题时最先想到的方法。在未排序序列中找到最小或是最大的元素，存放到排序序列的起始位置；然后再从剩余的未排序的元素中继续寻找最小或是最大的元素。这样子持续进行下去，直到所有的元素排好顺序。往往最先想到的方法能解决问题，但是不能更好的解决问题。</p>
+
+<pre><code class="java">package com.boxing.algorithm;
+
+public class SelectionSort implements SortAlgorithm {
+    @Override
+    public int[] doSort(int[] array) {
+        int min;
+        for (int index = 0; index &lt; array.length - 1; index++) {
+            min = index;
+            for (int temp = index + 1; temp &lt; array.length; temp++) {
+                if (array[temp] &lt; array[min]) min = temp;
+            }
+            swapNumbers(array, min, index);
+        }
+        return array;
+    }
+
+    private void swapNumbers(int[] array, int index1, int index2) {
+        int tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+    }
+}
+</code></pre>
+
+<pre><code class="java">public class SelectionSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new SelectionSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+</code></pre>
+
+<p>测试通过。</p>
+
+<h3>冒泡排序（Bubble sort）</h3>
+
+<p>冒泡排序，也叫sinking sort，是一种简单的排序算法。它重复地遍历要排序的数组，比较每一对相邻的元素，如果它们次序错误，就把它们进行交换。它的名字来自这种相对小的元素“上浮”到数组的顶部的方式。因为它对元素只用到了比较的操作方式，所以是一种比较排序。</p>
+
+<p><img src="/images/2015/bubblesort.jpeg" width="312" height="469"></p>
+
+<pre><code class="java">package com.boxing.algorithm;
+
+public class BubbleSort implements SortAlgorithm {
+    @Override
+    public int[] doSort(int[] array) {
+        for (int index = 0; index&lt;array.length-1;index++) {
+            for (int i = 0; i &lt; array.length - 1-index; i++) {
+                if (isLargerThanAfter(array, i)) {
+                    swapNumbers(array, i);
+                }
+            }
+        }
+
+        return array;
+    }
+
+    private boolean isLargerThanAfter(int[] array, int i) {
+        return array[i] &gt; array[i + 1];
+    }
+
+    private void swapNumbers(int[] array, int i) {
+        int temp = array[i];
+        array[i] = array[i + 1];
+        array[i + 1] = temp;
+    }
+}
+</code></pre>
+
+<pre><code class="java">public class BubbleSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new BubbleSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+</code></pre>
+
+<p>测试通过。</p>
+
+<h3>插入排序（Insertion sort）</h3>
+
+<p>插入排序是最简单的排序算法。它每次排好最终结果数组的一个元素。</p>
+
+<p>它的一般原理是第p次时，将位置p上的元素向左移动，直到它在前p+1个元素中的正确位置被找到。</p>
+
+<p><img src="/images/2015/insertion-sort.png" alt="Insertion sort" /></p>
+
+<pre><code class="java">package com.boxing.algorithm;
+
+public class InsertionSort implements SortAlgorithm {
+    @Override
+    public int[] doSort(int[] array) {
+        int temp;
+
+        for (int index = 1; index &lt; array.length; index++) {
+            temp = array[index];
+            int i = index;
+            while (i &gt; 0 &amp;&amp; array[i - 1] &gt; temp) {
+                array[i] = array[i - 1];
+                i--;
+            }
+            array[i] = temp;
+        }
+
+        return array;
+    }
+}
+</code></pre>
+
+<pre><code class="java">public class InsertionSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new InsertionSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+</code></pre>
+
+<p>测试通过。</p>
+
+<h3>希尔排序（Shell sort）</h3>
+
+<p>希尔排序是对插入排序的一种改进。</p>
+
+<p>插入排序有下面两个性质：</p>
+
+<ul>
+<li><p>插入排序在对几乎已经排好序的数据进行操作时，效率很高。</p></li>
+<li><p>插入排序是低效的，因为它每次只能将数据移动一位。</p></li>
+</ul>
+
+
+<p>希尔排序通过比较相距一定间隔的元素来工作，每次排序比较所用的距离随着算法的进行而减小，直到只比较相邻元素的最后一次排序为止。这样一个所用距离的序列叫做增量序列（increment sequence）。</p>
+
+<p>也就是对于这样的一组数：{ 13, 14, 94, 33, 82, 25, 59, 94, 65, 23, 45, 27, 73, 25, 39, 10 }，如果我们以距离5开始进行排序，它们看起来是这样的：</p>
+
+<p><img src="/images/2015/shell-sort-5.png" width="400" height="300"></p>
+
+<p>也就是说对每列进行了排序，得到了数组{ 10, 14, 73, 25, 23, 13, 27, 94, 33, 39, 25, 59, 94, 65, 82, 45 }，可以发现，此时10已经到了正确的位置上。再以距离3对数组进行排序：</p>
+
+<p><img src="/images/2015/shell-sort-3.png" width="400" height="300"></p>
+
+<p>最后以距离1进行排序，也就是简单的插入排序了。</p>
+
+<p>目前已知最好的增量序列是Sedgewick提出的，{ 1, 5, 19, 41, 109, … }，该序列中的项要么是(9×4<sup>i</sup>-9×2<sup>i</sup>+1)，要么是(4<sup>i</sup>-3×2<sup>i</sup>+1)。</p>
+
+<pre><code class="java">package com.boxing.algorithm;
+
+public class ShellSort implements SortAlgorithm {
+    @Override
+    public int[] doSort(int[] array) {
+        int gap = 1;
+        while (gap &lt; array.length / 3) {
+            gap = gap * 3 + 1;
+        }
+
+        for (; gap &gt;= 1; gap /= 3) {
+            for (int k = 0; k &lt; gap; k++) {
+                for (int i = gap + k; i &lt; array.length; i += gap) {
+                    for (int j = i; j &gt;= gap &amp;&amp; array[j] &lt; array[j - gap]; j -= gap) {
+                        swapNumbers(array, j, j - gap);
+                    }
+                }
+            }
+        }
+
+        return array;
+    }
+
+    private void swapNumbers(int[] array, int index1, int index2) {
+        int tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+    }
+}
+</code></pre>
+
+<pre><code class="java">public class ShellSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new ShellSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+</code></pre>
+
+<p>测试通过。</p>
+
+<h3>归并排序（Merge sort）</h3>
+
+<p>这个算法中基本的操作是把两个已排序的序列合并成一个序列。</p>
+
+<p>归并的操作过程为：</p>
+
+<ol>
+<li><p>创建一个空序列，使其大小为两个已排序的序列之和；</p></li>
+<li><p>设定两个计数器，最初的位置分别为两个已经排序序列的起始位置；</p></li>
+<li><p>比较两个计数器处元素的大小，选择相对小的元素放入空序列中，对应的计数器向前推进一步；</p></li>
+<li><p>重复步骤3直到某一计数器到达序列尾；</p></li>
+<li><p>将另一序列中剩下的所有元素复制到空序列中。</p></li>
+</ol>
+
+
+<p><img src="/images/2015/merge-sort.png"></p>
+
+<p>该算法是经典的分治（divide-and-conquer）策略，它将问题（divide）成一些小的问题然后递归求解，而治（conquer）的阶段则将分的阶段解得的各答案修补在一起。</p>
+
+<pre><code class="java">package com.boxing.algorithm;
+
+public class MergeSort implements SortAlgorithm {
+    private int[] array;
+    private int[] helper;
+
+    @Override
+    public int[] doSort(int[] array) {
+        this.array = array;
+        this.helper = new int[array.length];
+        mergeSort(0, array.length - 1);
+        return this.array;
+    }
+
+    private void mergeSort(int low, int high) {
+        if (low &lt; high) {
+            int middle = low + (high - low) / 2;
+
+            mergeSort(low, middle);
+            mergeSort(middle + 1, high);
+            merge(low, middle, high);
+        }
+    }
+
+    private void merge(int low, int middle, int high) {
+        System.arraycopy(array, low, helper, low, high + 1 - low);
+
+        int i = low;
+        int j = middle + 1;
+        int k = low;
+
+        while (i &lt;= middle &amp;&amp; j &lt;= high) {
+            if (helper[i] &lt;= helper[j]) {
+                array[k] = helper[i];
+                i++;
+            } else {
+                array[k] = helper[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i &lt;= middle) {
+            array[k] = helper[i];
+            k++;
+            i++;
+        }
+    }
+}
+</code></pre>
+
+<pre><code class="java">public class MergeSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new MergeSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+</code></pre>
+
+<p>测试通过。</p>
+
+<h3>快速排序（Quick sort）</h3>
+
+<p>快速排序是实践中一种快速的排序算法。它是一种分治的递归算法。它首先把一个大的数组分成两个小的子数组：较小的数的数组和较大的数的数组。再对这子数组做递归处理。</p>
+
+<p>实现快速排序的步骤：</p>
+
+<ol>
+<li><p>从数组中任意选择一个元素，称为枢纽元（pivot）。虽然无论选择哪个元素作为pivot都可以完成排序，但是有些选择显然优于其他选择。将第一个元素作为pivot是一种错误的做法。安全的做法是随机选取pivot。最好的做法是选择数组的中值：一般的做法是使用左端、右端和中心位置上的三个元素的中值作为pivot。</p></li>
+<li><p>对数组进行重新排序，所有比pivot小的数在pivot前面，所有比pivot大的数在pivot后面（相等的可以在任何一边）。经过这样的分区后，pivot就在它最终的位置上了。这个步骤叫做分区操作。</p></li>
+<li><p>把上述的步骤对含有较小数的子数组和含有较大数的子数组进行递归操作。</p></li>
+</ol>
+
+
+<p><img src="/images/2015/quick-sort1.png" width="250" height="304"></p>
+
+<pre><code class="java">package com.boxing.algorithm;
+
+public class QuickSort implements SortAlgorithm {
+    int[] array;
+
+    @Override
+    public int[] doSort(int[] array) {
+        this.array = array;
+        doQuickSort(this.array, 0, this.array.length - 1);
+        return this.array;
+    }
+
+    private void doQuickSort(int[] array, int left, int right) {
+        int i = left, j = right;
+        int pivot = median(array, left, right);
+
+        while (i &lt;= j) {
+            while (array[i] &lt; pivot) {
+                i++;
+            }
+            while (array[j] &gt; pivot) {
+                j--;
+            }
+            if (i &lt;= j) {
+                swapNumbers(array, i, j);
+                i++;
+                j--;
+            }
+        }
+        if (left &lt; j)
+            doQuickSort(array, left, j);
+        if (i &lt; right)
+            doQuickSort(array, i, right);
+    }
+
+    private int median(int[] array, int left, int right) {
+        int center = (left + right) / 2;
+
+        if (array[left] &gt; array[center])
+            swapNumbers(array, left, center);
+        if (array[left] &gt; array[right])
+            swapNumbers(array, left, right);
+        if (array[center] &gt; array[right])
+            swapNumbers(array, center, right);
+
+        swapNumbers(array, center, right - 1);
+        return array[right - 1];
+    }
+
+    private void swapNumbers(int[] array, int index1, int index2) {
+        int tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+    }
+}
+</code></pre>
+
+<pre><code class="java">public class QuickSortTest {
+    @Test
+    public void shouldInputAnArray_return_sortedArray() {
+        SortAlgorithm sortAlgorithm = new QuickSort();
+        int[] inputArray = {10, 34, 2, 56, 7, 67, 88, 42};
+        int[] outputArray = sortAlgorithm.doSort(inputArray);
+
+        assertThat(outputArray, is(new int[]{2, 7, 10, 34, 42, 56, 67, 88}));
+    }
+}
+</code></pre>
+
+<p>测试通过。上面的快速排序算法使用左端、右端和中心位置上的三个元素的中值作为pivot。这是比较好的实践。</p>
+
+<h3>算法代码repo</h3>
+
+<p>“<a href="https://github.com/BoxingP/sort_algorithm">戳我戳我戳我~(≧▽≦)/~</a>”</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://book.douban.com/subject/3351237/">数据结构与算法分析：Java语言描述</a></p></li>
+<li><p><a href="http://zh.wikipedia.org/wiki/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95">排序算法</a></p></li>
+<li><p><a href="http://www.sorting-algorithms.com/">Sorting Algorithm Animations</a></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在Java中正确地使用equals()和hashCode()方法]]></title>
+    <link href="http://boxingp.github.io/blog/2015/02/24/use-equals-and-hashcode-methods-in-java-correctly/"/>
+    <updated>2015-02-24T15:20:34+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/02/24/use-equals-and-hashcode-methods-in-java-correctly</id>
+    <content type="html"><![CDATA[<p>最近在用Java写一个跟购物有关的小程序。写测试的时候遇到了判断两个对象是否相等的问题。看了些资料，说一下自己对<code>equals()</code>和<code>hashCode()</code>这两个方法的理解。</p>
+
+<!-- more -->
+
+
+<p>在<code>Object</code>类中定义了<code>equals()</code>和<code>hashCode()</code>这两个方法。<code>Object</code>类是类继承结构的基础，所以是每一个类的父类。所有的对象，包括数组，都实现了在<code>Object</code>类中定义的方法。</p>
+
+<h3><strong>equals</strong></h3>
+
+<p><code>equals()</code>方法是用来判断其他的对象是否和该对象相等，它的性质有：</p>
+
+<ul>
+<li><p>自反性（reflexive）。对于任意不为<code>null</code>的引用值x，<code>x.equals(x)</code>一定是<code>true</code>。</p></li>
+<li><p>对称性（symmetric）。对于任意不为<code>null</code>的引用值<code>x</code>和<code>y</code>，当且仅当<code>x.equals(y)</code>是<code>true</code>时，<code>y.equals(x)</code>也是<code>true</code>。</p></li>
+<li><p>传递性（transitive）。对于任意不为<code>null</code>的引用值<code>x</code>、<code>y</code>和<code>z</code>，如果<code>x.equals(y)</code>是<code>true</code>，同时<code>y.equals(z)</code>是<code>true</code>，那么<code>x.equals(z)</code>一定是<code>true</code>。</p></li>
+<li><p>一致性（consistent）。对于任意不为<code>null</code>的引用值<code>x</code>和<code>y</code>，如果用于equals比较的对象信息没有被修改的话，多次调用时<code>x.equals(y)</code>要么一致地返回<code>true</code>要么一致地返回<code>false</code>。</p></li>
+<li><p>对于任意不为<code>null</code>的引用值<code>x</code>，<code>x.equals(null)</code>返回<code>false</code>。</p></li>
+</ul>
+
+
+<p>对于<code>Object</code>类来说，<code>equals()</code>方法在对象上实现的是差别可能性最大的等价关系，即，对于任意非<code>null</code>的引用值<code>x</code>和<code>y</code>，当且仅当<code>x</code>和<code>y</code>引用的是同一个对象，该方法才会返回<code>true</code>。</p>
+
+<p>需要注意的是当<code>equals()</code>方法被override时，<code>hashCode()</code>也要被override。按照一般<code>hashCode()</code>方法的实现来说，相等的对象，它们的hash code一定相等。</p>
+
+<h3><strong>hashCode</strong></h3>
+
+<p><code>hashCode()</code>方法给对象返回一个hash code值。这个方法被用于hash tables，例如HashMap。</p>
+
+<p>它的性质是：</p>
+
+<ul>
+<li><p>在一个Java应用的执行期间，如果一个对象提供给equals做比较的信息没有被修改的话，该对象多次调用<code>hashCode()</code>方法，该方法必须始终如一返回同一个integer。</p></li>
+<li><p>如果两个对象根据<code>equals(Object)</code>方法是相等的，那么调用二者各自的<code>hashCode()</code>方法必须产生同一个integer结果。</p></li>
+<li><p>并不要求根据<code>equals(java.lang.Object)</code>方法不相等的两个对象，调用二者各自的<code>hashCode()</code>方法必须产生不同的integer结果。然而，程序员应该意识到对于不同的对象产生不同的integer结果，有可能会提高hash table的性能。</p></li>
+</ul>
+
+
+<p>大量的实践表明，由<code>Object</code>类定义的<code>hashCode()</code>方法对于不同的对象返回不同的integer。</p>
+
+<p>来看一个例子。创建一个<code>Book</code>类：</p>
+
+<pre><code class="java">public class Book {
+    private String name;
+    private String author;
+
+    public Book(String name, String author) {
+        this.name = name;
+        this.author = author;
+    }
+}
+</code></pre>
+
+<p><code>Book</code>类有两个非常基础的属性：书名<code>name</code>和作者<code>author</code>。现在，来比较两本书：</p>
+
+<pre><code class="java">public class BookTest {
+    @Test
+    public void shouldTwoBookWithSameNameAuthor_return_equal() {
+        Book oneBook = new Book("A Book", "Jim");
+        Book anotherBook = new Book("A Book", "Jim");
+
+        assertEquals(oneBook, anotherBook);
+    }
+}
+</code></pre>
+
+<p>测试没有通过。虽然两本书有着同样的书名和作者，但是它们是两本“不同”的书。</p>
+
+<h3><strong>关于改写</strong></h3>
+
+<p>改写<code>equals()</code>方法看起来非常简单，但是有许多改写的方式会导致错误，并且后果非常严重。要避免问题最重要的办法是不改写<code>equals()</code>方法。</p>
+
+<p>那么什么时候应该改写<code>Object.equals</code>呢？当一个类有自己特有的“逻辑相等”概念（不同于对象身份的概念），而且超类也没有改写<code>equals()</code>以实现期望的行为，这时需要改写<code>equals()</code>方法。这通常适合于<a href="http://martinfowler.com/bliki/ValueObject.html">value object</a>。</p>
+
+<p>再说一遍，在每个改写了<code>equals()</code>方法的类中，必须要改写<code>hashCode()</code>方法。如果不这样做，就会违反<code>Object.hashCode</code>的通用约定，从而导致该类无法与所有基于hash的集合类结合在一起正常运作，这样的集合类包括HashMap、HashSet和HashTable。</p>
+
+<p>需要注意的是
+<code>java
+public int hashCode() {
+    return 0;
+}
+</code>
+这个<code>hashCode()</code>方法是合法的，因为相等的对象总是具有同样的散列码。但是它使得每一个对象都具有同样的散列码。因此，每个对象都被映射到同一个散列桶中，从而散列表被退化为链表。对于规模很大的散列表而言，这关系到散列表能否正常工作。</p>
+
+<p>一个好的散列函数通常倾向于“为不相等的对象产生不相等的散列码”。</p>
+
+<p>如果一个类是非可变的，并且计算散列码的代价也比较大，那么你应该考虑把散列码缓存在对象内部，而不是每次请求的时候都重新计算散列码。</p>
+
+<p>不要试图从散列码计算中排除掉一个对象的关键部分以提高性能。</p>
+
+<p>我使用的是IntelliJ，使用<code>^</code>＋<code>N</code>快捷键可以很好的override<code>equals()</code>和<code>hashCode()</code>方法：</p>
+
+<pre><code class="java">public class Book {
+    private String name;
+    private String author;
+
+    public Book(String name, String author) {
+        this.name = name;
+        this.author = author;
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        if (author != null ? !author.equals(book.author) : book.author != null) return false;
+        if (name != null ? !name.equals(book.name) : book.name != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        return result;
+    }
+}
+</code></pre>
+
+<p>这个时候再跑前面的测试就会发现测试通过了。</p>
+
+<p>那么如果我没有override<code>hashCode()</code>会发生什么呢？</p>
+
+<pre><code class="java">public class Book {
+    private String name;
+    private String author;
+
+    public Book(String name, String author) {
+        this.name = name;
+        this.author = author;
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        if (author != null ? !author.equals(book.author) : book.author != null) return false;
+        if (name != null ? !name.equals(book.name) : book.name != null) return false;
+
+        return true;
+    }
+}
+</code></pre>
+
+<p>这个时候你会发现之前的测试依然通过，但是如果换一下测试：</p>
+
+<pre><code class="java">public class BookTest {
+    @Test
+    public void shouldSearchWithSameBook_return_correctBorrowPeople() {
+        Book oneBook = new Book("A Book", "Jim");
+        Book antherBook = new Book("A Book", "Jim");
+
+        Map&lt;Book, String&gt; borrowMap = new HashMap&lt;Book, String&gt;();
+        borrowMap.put(oneBook, "Li Lei");
+
+        assertThat(borrowMap.get(antherBook), is("Li Lei"));
+    }
+}
+</code></pre>
+
+<p>逻辑上，我用相同的书在借书表里查询，应该返回对应的人名。但是这条测试并没有通过，事实上返回的是<code>null</code>。因为没有改写<code>hashCode()</code>方法，从而导致两个相等的实例具有不相等的散列码，违反了<code>hashCode()</code>的规定。<code>put()</code>方法把LiLei借出的书对象存放在一个散列桶中，<code>get()</code>方法会在另一个散列桶中查找LiLei所借的书对象，返回<code>null</code>也就不出意外了。要想修正，只要提供适当的<code>hashCode()</code>方法就可以了。</p>
+
+<p><strong>参考文献:</strong></p>
+
+<ol>
+<li><a href="http://www.oschina.net/question/82993_75533">Java中正确使用hashCode和equals方法</a></li>
+<li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html">Class Object</a></li>
+<li><a href="http://book.douban.com/subject/1103015/">Effective Java 中文版</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在OS X中使用jEnv管理多个Java版本]]></title>
+    <link href="http://boxingp.github.io/blog/2015/01/25/manage-multiple-versions-of-java-on-os-x/"/>
+    <updated>2015-01-25T23:16:17+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/01/25/manage-multiple-versions-of-java-on-os-x</id>
+    <content type="html"><![CDATA[<p>使用Java时会接触到不同的版本。大多数时候我在使用Java 8，但是因为某些框架或是工具的要求，这时不得不让Java 6上前线。一般情况下是配置JAVA_HOME，指定不同的Java版本，但是这需要人为手动的输入。如果又要选择其他版本，就需要对JAVA_HOME重新进行设置。这十分麻烦，所以在做这些操作时真是“会呼吸的痛”。终于，我发现了<a href="http://www.jenv.be/">jEnv</a>。</p>
+
+<p>正如它的官网所宣称的那样，它是来让你忘记怎么配置JAVA_HOME环境变量的神队友。使用简单的命令就可以在不同的Java版本之间进行切换。如果你使用过rbenv，你会发现jEnv就如同<a href="https://github.com/sstephenson/rbenv">rbenv</a>的Java版一样。</p>
+
+<!-- more -->
+
+
+<p><strong>基本使用:</strong></p>
+
+<p>在Mac OS X下使用<a href="http://brew.sh/">Homebrew</a>安装jEnv：</p>
+
+<pre><code class="sh">$ brew install jenv
+</code></pre>
+
+<p>安装成功后需要进行一下简单的配置，让它可以起作用：</p>
+
+<p>使用Bash的情况
+<code>sh
+$ echo 'export PATH="$HOME/.jenv/bin:$PATH"' &gt;&gt; ~/.bash_profile
+$ echo 'eval "$(jenv init -)"' &gt;&gt; ~/.bash_profile
+</code>
+使用Zsh的情况
+<code>sh
+$ echo 'export PATH="$HOME/.jenv/bin:$PATH"' &gt;&gt; ~/.zshrc
+$ echo 'eval "$(jenv init -)"' &gt;&gt; ~/.zshrc
+</code></p>
+
+<p>好了，jEnv已经安装好了，让我们来看一下它找见哪个Java版本了：
+<code>sh
+$ jenv versions
+* system (set by /Users/bxpeng/.jenv/version)
+</code>
+它只找到了系统默认的Java，即使我已经下载了其他版本的Java。<code>*</code>表示当前选择的版本。</p>
+
+<p>和rbenv不同的是，jEnv不能自己安装任何版本的Java，所以需要我们手动安装好之后再用jEnv指向它们。</p>
+
+<p>安装Java 6，需要在<a href="http://support.apple.com/kb/DL1572">Apple</a>进行下载。它将安装到<code>/System/Library/Java/JavaVirtualMachines/</code>下；
+安装Java 7，可以在<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html">Oracle</a>进行下载.它将安装到<code>/Library/Java/JavaVirtualMachines/</code>下；
+安装Java 8，可以在<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Oracle</a>进行下载.它将安装到<code>/Library/Java/JavaVirtualMachines/</code>下。</p>
+
+<p>使用<code>jenv add</code>将Java 6加入jenv中：
+<code>sh
+$ jenv add /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/
+1.6 added
+1.6.0.65 added
+oracle64-1.6.0.65 added
+</code>
+运行<code>jenv versions</code>时会显示：
+<code>sh
+$ jenv versions
+* system (set by /Users/bxpeng/.jenv/version)
+  1.6
+  1.6.0.65
+  oracle64-1.6.0.65
+</code>
+同样的，使用<code>jenv add</code>将Java 7加入jenv中：
+<code>sh
+$ jenv add /Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home/
+1.7 added
+1.7.0.71 added
+oracle64-1.7.0.71 added
+</code>
+<code>sh
+$ jenv add /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home/
+1.8 added
+1.8.0.25 added
+oracle64-1.8.0.25 added
+</code>
+现在运行<code>jenv versions</code>会显示：
+<code>sh
+$ jenv versions
+* system (set by /Users/bxpeng/.jenv/version)
+  1.6
+  1.6.0.65
+  oracle64-1.6.0.65
+  1.7
+  1.7.0.71
+  oracle64-1.7.0.71
+  1.8
+  1.8.0.25
+  oracle64-1.8.0.25
+</code>
+对于博主这种不是处女座的人来说，也觉得需要对版本再管理一下，使用<code>jenv remove</code>可以从jEnv中去掉不需要的Java版本：
+<code>sh
+$ jenv remove 1.6
+JDK 1.6 removed
+</code>
+整理后，再运行<code>jenv versions</code>会显示：
+<code>sh
+$ jenv versions
+* system (set by /Users/bxpeng/.jenv/version)
+  1.6.0.65
+  1.7.0.71
+  1.8.0.25
+</code>
+选择一个Java版本，运行<code>jenv local</code>，例如：
+<code>sh
+$ jenv local 1.8.0.25
+$ java -version
+java version "1.8.0_25"
+Java(TM) SE Runtime Environment (build 1.8.0_25-b17)
+Java HotSpot(TM) 64-Bit Server VM (build 25.25-b02, mixed mode)
+</code>
+DangDangDangDang，我们已经成功地指定了某文件夹中local的Java版本。</p>
+
+<p>你可以运行<code>jenv global</code>设置一个默认的Java版本，运行<code>jenv which java</code>显示可执行的Java的完整路径。</p>
+
+<p>你也可以在特定的文件夹下使用.java-version文件来设定Java的版本。当我需要在Project中使用Java 6时，我仅仅需要把<code>1.6.0.65</code>作为内容保存在.java-version文件中，当我进入该文件夹时jEnv会自动地帮助我设定local的Java的版本。</p>
+
+<p>没错，我们现在有了Java的多个版本，并且可以在它们之间轻松切换。更多的使用方法可以在<a href="http://www.jenv.be/">jEnv官网</a>的官网查询到。</p>
+
+<p><strong>参考文献:</strong></p>
+
+<ol>
+<li><a href="http://www.jenv.be/">jEnv官网</a></li>
+<li><a href="http://andrew-jones.com/blog/managing-multiple-versions-of-java-on-os-x/">Managing multiple versions of Java on OS X</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

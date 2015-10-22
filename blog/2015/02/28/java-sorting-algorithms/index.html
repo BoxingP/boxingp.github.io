@@ -1,0 +1,896 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>一些排序算法的Java实现 - Rain-driven Development</title>
+  <meta name="author" content="Boxing">
+
+  
+  <meta name="description" content="最近在学习复习《数据结构与算法分析》，对一些典型的排序算法自己用Java实现，在这个练习的过程中加深对算法的了解。 选择排序（Selection sort） 是一种简单直观的排序算法，我觉得基本上是你面对排序问题时最先想到的方法。在未排序序列中找到最小或是最大的元素，存放到排序序列的起始位置； &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://boxingp.github.io/blog/2015/02/28/java-sorting-algorithms">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Rain-driven Development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58940494-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Rain-driven Development</a></h1>
+  
+    <h2>雨驱动开发</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="boxingp.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">一些排序算法的Java实现</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-28T23:33:52+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:33 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近在<del>学习</del>复习《数据结构与算法分析》，对一些典型的排序算法自己用Java实现，在这个练习的过程中加深对算法的了解。</p>
+
+<!-- more -->
+
+
+<h3>选择排序（Selection sort）</h3>
+
+<p>是一种简单直观的排序算法，我觉得基本上是你面对排序问题时最先想到的方法。在未排序序列中找到最小或是最大的元素，存放到排序序列的起始位置；然后再从剩余的未排序的元素中继续寻找最小或是最大的元素。这样子持续进行下去，直到所有的元素排好顺序。往往最先想到的方法能解决问题，但是不能更好的解决问题。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">boxing</span><span class="o">.</span><span class="na">algorithm</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SelectionSort</span> <span class="kd">implements</span> <span class="n">SortAlgorithm</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">doSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">min</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="n">index</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">min</span> <span class="o">=</span> <span class="n">index</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">temp</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">temp</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">temp</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">[</span><span class="n">min</span><span class="o">])</span> <span class="n">min</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">swapNumbers</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">min</span><span class="o">,</span> <span class="n">index</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">array</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">swapNumbers</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">index1</span><span class="o">,</span> <span class="kt">int</span> <span class="n">index2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">index1</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">array</span><span class="o">[</span><span class="n">index1</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">index2</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">array</span><span class="o">[</span><span class="n">index2</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SelectionSortTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldInputAnArray_return_sortedArray</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">SortAlgorithm</span> <span class="n">sortAlgorithm</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SelectionSort</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">inputArray</span> <span class="o">=</span> <span class="o">{</span><span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">,</span> <span class="mi">42</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">outputArray</span> <span class="o">=</span> <span class="n">sortAlgorithm</span><span class="o">.</span><span class="na">doSort</span><span class="o">(</span><span class="n">inputArray</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">outputArray</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">2</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">42</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">}));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>测试通过。</p>
+
+<h3>冒泡排序（Bubble sort）</h3>
+
+<p>冒泡排序，也叫sinking sort，是一种简单的排序算法。它重复地遍历要排序的数组，比较每一对相邻的元素，如果它们次序错误，就把它们进行交换。它的名字来自这种相对小的元素“上浮”到数组的顶部的方式。因为它对元素只用到了比较的操作方式，所以是一种比较排序。</p>
+
+<p><img src="/images/2015/bubblesort.jpeg" width="312" height="469"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">boxing</span><span class="o">.</span><span class="na">algorithm</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BubbleSort</span> <span class="kd">implements</span> <span class="n">SortAlgorithm</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">doSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">index</span><span class="o">&lt;</span><span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span><span class="n">index</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">-</span><span class="n">index</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">isLargerThanAfter</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">i</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">swapNumbers</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">array</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isLargerThanAfter</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">swapNumbers</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">array</span><span class="o">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BubbleSortTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldInputAnArray_return_sortedArray</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">SortAlgorithm</span> <span class="n">sortAlgorithm</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">BubbleSort</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">inputArray</span> <span class="o">=</span> <span class="o">{</span><span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">,</span> <span class="mi">42</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">outputArray</span> <span class="o">=</span> <span class="n">sortAlgorithm</span><span class="o">.</span><span class="na">doSort</span><span class="o">(</span><span class="n">inputArray</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">outputArray</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">2</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">42</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">}));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>测试通过。</p>
+
+<h3>插入排序（Insertion sort）</h3>
+
+<p>插入排序是最简单的排序算法。它每次排好最终结果数组的一个元素。</p>
+
+<p>它的一般原理是第p次时，将位置p上的元素向左移动，直到它在前p+1个元素中的正确位置被找到。</p>
+
+<p><img src="/images/2015/insertion-sort.png" alt="Insertion sort" /></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">boxing</span><span class="o">.</span><span class="na">algorithm</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InsertionSort</span> <span class="kd">implements</span> <span class="n">SortAlgorithm</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">doSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">temp</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">index</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">temp</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">index</span><span class="o">];</span>
+</span><span class='line'>            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">index</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">temp</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+</span><span class='line'>                <span class="n">i</span><span class="o">--;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">array</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InsertionSortTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldInputAnArray_return_sortedArray</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">SortAlgorithm</span> <span class="n">sortAlgorithm</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">InsertionSort</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">inputArray</span> <span class="o">=</span> <span class="o">{</span><span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">,</span> <span class="mi">42</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">outputArray</span> <span class="o">=</span> <span class="n">sortAlgorithm</span><span class="o">.</span><span class="na">doSort</span><span class="o">(</span><span class="n">inputArray</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">outputArray</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">2</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">42</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">}));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>测试通过。</p>
+
+<h3>希尔排序（Shell sort）</h3>
+
+<p>希尔排序是对插入排序的一种改进。</p>
+
+<p>插入排序有下面两个性质：</p>
+
+<ul>
+<li><p>插入排序在对几乎已经排好序的数据进行操作时，效率很高。</p></li>
+<li><p>插入排序是低效的，因为它每次只能将数据移动一位。</p></li>
+</ul>
+
+
+<p>希尔排序通过比较相距一定间隔的元素来工作，每次排序比较所用的距离随着算法的进行而减小，直到只比较相邻元素的最后一次排序为止。这样一个所用距离的序列叫做增量序列（increment sequence）。</p>
+
+<p>也就是对于这样的一组数：{ 13, 14, 94, 33, 82, 25, 59, 94, 65, 23, 45, 27, 73, 25, 39, 10 }，如果我们以距离5开始进行排序，它们看起来是这样的：</p>
+
+<p><img src="/images/2015/shell-sort-5.png" width="400" height="300"></p>
+
+<p>也就是说对每列进行了排序，得到了数组{ 10, 14, 73, 25, 23, 13, 27, 94, 33, 39, 25, 59, 94, 65, 82, 45 }，可以发现，此时10已经到了正确的位置上。再以距离3对数组进行排序：</p>
+
+<p><img src="/images/2015/shell-sort-3.png" width="400" height="300"></p>
+
+<p>最后以距离1进行排序，也就是简单的插入排序了。</p>
+
+<p>目前已知最好的增量序列是Sedgewick提出的，{ 1, 5, 19, 41, 109, … }，该序列中的项要么是(9×4<sup>i</sup>-9×2<sup>i</sup>+1)，要么是(4<sup>i</sup>-3×2<sup>i</sup>+1)。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">boxing</span><span class="o">.</span><span class="na">algorithm</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShellSort</span> <span class="kd">implements</span> <span class="n">SortAlgorithm</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">doSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">gap</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">gap</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">/</span> <span class="mi">3</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(;</span> <span class="n">gap</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">gap</span> <span class="o">/=</span> <span class="mi">3</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">gap</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">gap</span> <span class="o">+</span> <span class="n">k</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">gap</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="n">gap</span> <span class="o">&amp;&amp;</span> <span class="n">array</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">gap</span><span class="o">];</span> <span class="n">j</span> <span class="o">-=</span> <span class="n">gap</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">swapNumbers</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">j</span> <span class="o">-</span> <span class="n">gap</span><span class="o">);</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">array</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">swapNumbers</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">index1</span><span class="o">,</span> <span class="kt">int</span> <span class="n">index2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">index1</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">array</span><span class="o">[</span><span class="n">index1</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">index2</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">array</span><span class="o">[</span><span class="n">index2</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShellSortTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldInputAnArray_return_sortedArray</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">SortAlgorithm</span> <span class="n">sortAlgorithm</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ShellSort</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">inputArray</span> <span class="o">=</span> <span class="o">{</span><span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">,</span> <span class="mi">42</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">outputArray</span> <span class="o">=</span> <span class="n">sortAlgorithm</span><span class="o">.</span><span class="na">doSort</span><span class="o">(</span><span class="n">inputArray</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">outputArray</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">2</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">42</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">}));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>测试通过。</p>
+
+<h3>归并排序（Merge sort）</h3>
+
+<p>这个算法中基本的操作是把两个已排序的序列合并成一个序列。</p>
+
+<p>归并的操作过程为：</p>
+
+<ol>
+<li><p>创建一个空序列，使其大小为两个已排序的序列之和；</p></li>
+<li><p>设定两个计数器，最初的位置分别为两个已经排序序列的起始位置；</p></li>
+<li><p>比较两个计数器处元素的大小，选择相对小的元素放入空序列中，对应的计数器向前推进一步；</p></li>
+<li><p>重复步骤3直到某一计数器到达序列尾；</p></li>
+<li><p>将另一序列中剩下的所有元素复制到空序列中。</p></li>
+</ol>
+
+
+<p><img src="/images/2015/merge-sort.png"></p>
+
+<p>该算法是经典的分治（divide-and-conquer）策略，它将问题（divide）成一些小的问题然后递归求解，而治（conquer）的阶段则将分的阶段解得的各答案修补在一起。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">boxing</span><span class="o">.</span><span class="na">algorithm</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MergeSort</span> <span class="kd">implements</span> <span class="n">SortAlgorithm</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">helper</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">doSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">helper</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">mergeSort</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">array</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">array</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">mergeSort</span><span class="o">(</span><span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">low</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kt">int</span> <span class="n">middle</span> <span class="o">=</span> <span class="n">low</span> <span class="o">+</span> <span class="o">(</span><span class="n">high</span> <span class="o">-</span> <span class="n">low</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">mergeSort</span><span class="o">(</span><span class="n">low</span><span class="o">,</span> <span class="n">middle</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">mergeSort</span><span class="o">(</span><span class="n">middle</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">merge</span><span class="o">(</span><span class="n">low</span><span class="o">,</span> <span class="n">middle</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">merge</span><span class="o">(</span><span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">middle</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">helper</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">high</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">low</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">low</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">middle</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">low</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">middle</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">helper</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">helper</span><span class="o">[</span><span class="n">j</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">array</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">helper</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span><span class='line'>                <span class="n">i</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">array</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">helper</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+</span><span class='line'>                <span class="n">j</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">k</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">middle</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">array</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">helper</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span><span class='line'>            <span class="n">k</span><span class="o">++;</span>
+</span><span class='line'>            <span class="n">i</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MergeSortTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldInputAnArray_return_sortedArray</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">SortAlgorithm</span> <span class="n">sortAlgorithm</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">MergeSort</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">inputArray</span> <span class="o">=</span> <span class="o">{</span><span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">,</span> <span class="mi">42</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">outputArray</span> <span class="o">=</span> <span class="n">sortAlgorithm</span><span class="o">.</span><span class="na">doSort</span><span class="o">(</span><span class="n">inputArray</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">outputArray</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">2</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">42</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">}));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>测试通过。</p>
+
+<h3>快速排序（Quick sort）</h3>
+
+<p>快速排序是实践中一种快速的排序算法。它是一种分治的递归算法。它首先把一个大的数组分成两个小的子数组：较小的数的数组和较大的数的数组。再对这子数组做递归处理。</p>
+
+<p>实现快速排序的步骤：</p>
+
+<ol>
+<li><p>从数组中任意选择一个元素，称为枢纽元（pivot）。虽然无论选择哪个元素作为pivot都可以完成排序，但是有些选择显然优于其他选择。将第一个元素作为pivot是一种错误的做法。安全的做法是随机选取pivot。最好的做法是选择数组的中值：一般的做法是使用左端、右端和中心位置上的三个元素的中值作为pivot。</p></li>
+<li><p>对数组进行重新排序，所有比pivot小的数在pivot前面，所有比pivot大的数在pivot后面（相等的可以在任何一边）。经过这样的分区后，pivot就在它最终的位置上了。这个步骤叫做分区操作。</p></li>
+<li><p>把上述的步骤对含有较小数的子数组和含有较大数的子数组进行递归操作。</p></li>
+</ol>
+
+
+<p><img src="/images/2015/quick-sort1.png" width="250" height="304"></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">boxing</span><span class="o">.</span><span class="na">algorithm</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickSort</span> <span class="kd">implements</span> <span class="n">SortAlgorithm</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">doSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">doQuickSort</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">array</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">array</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">array</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">doQuickSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">left</span><span class="o">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">right</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">median</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">j</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">while</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">i</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="k">while</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">j</span><span class="o">--;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">j</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">swapNumbers</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">i</span><span class="o">++;</span>
+</span><span class='line'>                <span class="n">j</span><span class="o">--;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">j</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">doQuickSort</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">right</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">doQuickSort</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">right</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">median</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">center</span> <span class="o">=</span> <span class="o">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">left</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">array</span><span class="o">[</span><span class="n">center</span><span class="o">])</span>
+</span><span class='line'>            <span class="n">swapNumbers</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">center</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">left</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">array</span><span class="o">[</span><span class="n">right</span><span class="o">])</span>
+</span><span class='line'>            <span class="n">swapNumbers</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">center</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">array</span><span class="o">[</span><span class="n">right</span><span class="o">])</span>
+</span><span class='line'>            <span class="n">swapNumbers</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">center</span><span class="o">,</span> <span class="n">right</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">swapNumbers</span><span class="o">(</span><span class="n">array</span><span class="o">,</span> <span class="n">center</span><span class="o">,</span> <span class="n">right</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">array</span><span class="o">[</span><span class="n">right</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">swapNumbers</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">array</span><span class="o">,</span> <span class="kt">int</span> <span class="n">index1</span><span class="o">,</span> <span class="kt">int</span> <span class="n">index2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">index1</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">array</span><span class="o">[</span><span class="n">index1</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">index2</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">array</span><span class="o">[</span><span class="n">index2</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickSortTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldInputAnArray_return_sortedArray</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">SortAlgorithm</span> <span class="n">sortAlgorithm</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QuickSort</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">inputArray</span> <span class="o">=</span> <span class="o">{</span><span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">,</span> <span class="mi">42</span><span class="o">};</span>
+</span><span class='line'>        <span class="kt">int</span><span class="o">[]</span> <span class="n">outputArray</span> <span class="o">=</span> <span class="n">sortAlgorithm</span><span class="o">.</span><span class="na">doSort</span><span class="o">(</span><span class="n">inputArray</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">outputArray</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">2</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">42</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">88</span><span class="o">}));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>测试通过。上面的快速排序算法使用左端、右端和中心位置上的三个元素的中值作为pivot。这是比较好的实践。</p>
+
+<h3>算法代码repo</h3>
+
+<p>“<a href="https://github.com/BoxingP/sort_algorithm">戳我戳我戳我~(≧▽≦)/~</a>”</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://book.douban.com/subject/3351237/">数据结构与算法分析：Java语言描述</a></p></li>
+<li><p><a href="http://zh.wikipedia.org/wiki/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95">排序算法</a></p></li>
+<li><p><a href="http://www.sorting-algorithms.com/">Sorting Algorithm Animations</a></p></li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Boxing
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-28T23:33:52+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:33 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/27/the-agile-software-development-reading-notes/" title="Previous Post: 《敏捷软件开发：原则、模式与实践》读书笔记">&laquo; 《敏捷软件开发：原则、模式与实践》读书笔记</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/03/29/create-personal-blog-in-github-by-using-octopress/" title="Next Post: 使用Octopress在Github上搭建个人博客">使用Octopress在Github上搭建个人博客 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Boxing -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'raindrivendevelopment';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://boxingp.github.io/blog/2015/02/28/java-sorting-algorithms/';
+        var disqus_url = 'http://boxingp.github.io/blog/2015/02/28/java-sorting-algorithms/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="http://arrow.scrolltotop.com/arrow86.js"></script>
+<noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+</body>
+</html>

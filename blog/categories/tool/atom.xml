@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Tool | Rain-driven Development]]></title>
+  <link href="http://boxingp.github.io/blog/categories/tool/atom.xml" rel="self"/>
+  <link href="http://boxingp.github.io/"/>
+  <updated>2015-10-23T03:30:41+08:00</updated>
+  <id>http://boxingp.github.io/</id>
+  <author>
+    <name><![CDATA[Boxing]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用Octopress在Github上搭建个人博客]]></title>
+    <link href="http://boxingp.github.io/blog/2015/03/29/create-personal-blog-in-github-by-using-octopress/"/>
+    <updated>2015-03-29T20:08:49+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/03/29/create-personal-blog-in-github-by-using-octopress</id>
+    <content type="html"><![CDATA[<p>在Github上像是写代码一样写博客有一段时间了，有必要把搭建博客的方法整理一下，方便更多的人DIY，享受一下“博客驱动开发”。</p>
+
+<p><img src="/images/2015/logo.png"></p>
+
+<!-- more -->
+
+
+<p><a href="http://octopress.org/">Octopress</a>是<a href="http://brandonmathis.com/">Brandon Mathis</a>在<a href="http://github.com/mojombo/jekyll">Jekyll</a>上开发的，利用<a href="http://pages.github.com/">Github Pages</a>来展示静态页面。</p>
+
+<p>正如Octopress网站所说的</p>
+
+<blockquote><p>Octopress is a blogging framework for hackers. You should be comfortable running shell commands and familiar with the basics of Git.</p></blockquote>
+
+<p>所以如果你不喜欢这种方式，可以选择其他博客平台或框架，毕竟工具就是为了让我们效率最大化而不是造成困惑。</p>
+
+<p>本文是基于OS X系统进行介绍的。</p>
+
+<h2>准备工作</h2>
+
+<ol>
+<li><p>安装Git。</p></li>
+<li><p>安装Ruby 1.9.3。</p></li>
+</ol>
+
+
+<p>在Mac上使用<a href="http://brew.sh/">brew</a>安装Git：</p>
+
+<pre><code class="sh">$ brew install git
+</code></pre>
+
+<p>同样的，使用brew安装<a href="https://github.com/sstephenson/rbenv">rbenv</a>之后，使用rbenv安装所需要的Ruby版本：</p>
+
+<pre><code class="sh">$ brew install rbenv
+$ rbenv install 1.9.3-p194
+$ rbenv local 1.9.3-p194
+$ rbenv rehash
+</code></pre>
+
+<p>安装好后可以进行验证：
+<code>sh
+$ git version
+$ rbenv version
+</code></p>
+
+<h2>搭建博客</h2>
+
+<p>首先使用Git将Octopress从Github上clone到本地：</p>
+
+<pre><code class="sh">$ git clone git@github.com:imathis/octopress.git octopress
+$ cd octopress
+</code></pre>
+
+<p>紧接着，安装依赖：</p>
+
+<pre><code class="sh">$ gem install bundler
+$ rbenv rehash
+$ bundle install
+</code></pre>
+
+<p>安装默认的Octopress主题：</p>
+
+<pre><code class="sh">$ rake install
+</code></pre>
+
+<h2>选择博客主题</h2>
+
+<p>有很多第三方的Octopress主题可供选择——<a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">3rd Party Octopress Themes</a>。</p>
+
+<p>通过<code>git submodule add</code>将需要的主题项目加为子模块，接着安装主题：</p>
+
+<pre><code class="sh">$ git submodule add GIT_URL .themes/THEME_NAME
+$ rake install['THEME_NAME']
+$ rake generate
+</code></pre>
+
+<p>我的博客使用的是<code>whiterspace</code>主题。</p>
+
+<h2>配置博客</h2>
+
+<p>正如Octopress的作者所说的，大部分情况下只需要修改<code>Rakefile</code>和<code>_config.yml</code>就可以了。其中<code>Rakefile</code>是和部署有关的，除非你使用rsync，否则不需要动它。</p>
+
+<p>在<code>_config.yml</code>中，需要对三个部分进行配置。</p>
+
+<h3>主要配置</h3>
+
+<pre><code class="sh">url:                # For rewriting urls for RSS, etc
+title:              # Used in the header and title tags
+subtitle:           # A description used in the header
+author:             # Your name, for RSS, Copyright, Metadata
+simple_search:      # Search engine for simple site search
+description:        # A default meta description for your site
+date_format:        # Format dates using Ruby's date strftime syntax
+subscribe_rss:      # Url for your blog's feed, defauts to /atom.xml
+subscribe_email:    # Url to subscribe by email (service required)
+category_feeds:     # Enable per category RSS feeds (defaults to false in 2.1)
+email:              # Email address for the RSS feed if you want it.
+</code></pre>
+
+<h3>Jekyll和Plugins</h3>
+
+<p>这是和Jekyll和Plugins有关的，详情见<a href="http://octopress.org/docs/configuring/">Configuring Octopress</a>。</p>
+
+<h3>第三方组件</h3>
+
+<p>这些第三方组件是包含在Octopress中的，只需要配置好就可以添加到自己的博客中。</p>
+
+<ul>
+<li><p>Github：在sidebar中列出你的Github Repo。</p></li>
+<li><p>Twitter：添加一个分享到Twitter的按钮。</p></li>
+<li><p>Google Plus One：设置分享到Google +1。</p></li>
+<li><p>Pinboard：在sidebar中分享你最近的<a href="https://pinboard.in/">Pinboard</a>书签。</p></li>
+<li><p>Delicious：在sidebar中分享你最近的<a href="https://delicious.com/">Delicious</a>书签。</p></li>
+<li><p>Disqus Comments：访问<a href="https://disqus.com/">Disqus</a>，创建好账号登录后点击<code>Settings</code>，点击<code>Admin</code>，就可以为个人博客站点创建一个short name，把它添加到<code>_config.yml</code>中的<code>disqus_short_name</code>后面就可以在个人博客中使用Disqus进行评论。</p></li>
+<li><p>Google Analytics：在<a href="http://www.google.com/analytics/">Google Analytics</a>中获取跟踪ID，把它添加到<code>_config.yml</code>中的<code>google_analytics_tracking_id</code>后面就可以使用Google Analytics对个人博客进行分析统计。</p></li>
+<li><p>Facebook：添加Facebook<code>like</code>按钮。</p></li>
+</ul>
+
+
+<h2>部署博客</h2>
+
+<h3>使用Github User/Organization pages</h3>
+
+<p>Github的<a href="http://pages.github.com/">Pages service</a>允许我们为自己的Repo创建展示页面。我们使用<code>http://USER_NAME.github.io</code>作为博客的地址，当然你也可以使用自己的域名（<a href="http://octopress.org/docs/deploying/github/#custom_domains">怎么做</a>）。</p>
+
+<p>首先，我们在Github上新建一个Repo，把它命名为<code>USER_NAME.github.io</code>，其中<code>USER_NAME</code>是你在Github上的用户名。这是为了把<code>master</code>branch作为web server，使用<code>http://USER_NAME.github.io</code>链接展示你的页面。也就是说你需要在<code>source</code>branch上进行工作，并把生成的内容push到<code>master</code>branch上。</p>
+
+<p>如果你觉的这些好麻烦，没事，Octopress会用一个配置task来帮助你把它们做好：</p>
+
+<pre><code class="sh">$ rake setup_github_pages
+</code></pre>
+
+<p>这个rake task会问你要Github Repo的URL。把上面我们新建的Repo的SSH或者HTTPS URL复制到这里（e.g. git@github.com:USER_NAME/USER_NAME.github.io.git）。</p>
+
+<p>接着，它会为你做以下这些：</p>
+
+<ul>
+<li><p>存储你的Github Pages仓库URL。</p></li>
+<li><p>把指向imathis/octopress的remote由<code>origin</code>重命名为<code>octopress</code>。</p></li>
+<li><p>把你的Github Pages仓库作为默认的<code>origin</code>remote。</p></li>
+<li><p>把<code>active</code>branch从<code>master</code>切换到<code>source</code>。</p></li>
+<li><p>使你的博客URL与你的仓库一致。</p></li>
+<li><p>在<code>_deploy</code>文件夹中设置一个<code>master</code>branch用来部署。</p></li>
+</ul>
+
+
+<p>紧接着运行：</p>
+
+<pre><code class="sh">$ rake generate
+$ rake deploy
+</code></pre>
+
+<p>它们会生成你的博客，把生成的文件复制到<code>_deploy</code>中，把它们添加到git，commit然后push到<code>master</code>branch。</p>
+
+<p>最后用浏览器打开<code>http://USER_NAME.github.io</code>，你就会看见自己的博客了。首次push可能会花费一段时间等待Github为你生成页面。</p>
+
+<p>当然不要忘记把更改的文件push到<code>source</code>branch上：</p>
+
+<pre><code class="sh">$ git add .
+$ git commit -m 'YOUR_MESSAGE'
+$ git push origin source
+</code></pre>
+
+<h3>使用Github Project pages (gh-pages)</h3>
+
+<p>Github的Project Pages服务允许你为你的已存在的Repo提供一个站点。它会在你的Repo中寻找<code>gh-pages</code>branch，把上面的内容在这个链接中展示<code>http://USER_NAME.github.io/REPO_NAME</code>。</p>
+
+<p>和上面步骤一致，只不过在运行<code>rake setup_github_pages</code>后输入的是已存在Repo的URL。</p>
+
+<p>这个的好处是可以把<code>http://USER_NAME.github.io</code>留下来以后再使用，比如个人主页什么的。</p>
+
+<h2>开始写博客</h2>
+
+<h3>博客</h3>
+
+<p>博客存储在<code>source/_posts</code>文件夹中，并按照Jekyll的惯例进行命名: <code>YYYY-MM-DD-post-title.markdown</code>。文件的名字会被用作URL的一部分，日期会用来对文件进行区分和排序。</p>
+
+<p>Octopress提供一个rake task来生成一篇新的博客：</p>
+
+<pre><code class="sh">$ rake new_post["NEW_TITLE"]
+</code></pre>
+
+<p>创建好的文件默认是<code>.markdown</code>格式。</p>
+
+<p>用编辑器打开一篇博客，开头的<a href="http://jekyllrb.com/docs/frontmatter/">Front Matter</a>会告诉Jekyll如何处理博客和页面。</p>
+
+<pre><code class="sh">---
+layout: post
+title: "POST_TITLE"
+date: POST_DATA
+comments: true
+external-url:
+categories:
+---
+</code></pre>
+
+<p>你可以关闭评论也可以为博客添加标签。如果还在打草稿，可以添加<code>published: false</code>以免它在生成文件时被发布。你可以添加一个标签也可以添加多个标签：</p>
+
+<pre><code class="sh"># One category
+categories: Sass
+
+# Multiple categories example 1
+categories: [CSS3, Sass, Media Queries]
+
+# Multiple categories example 2
+categories:
+- CSS3
+- Sass
+- Media Queries
+</code></pre>
+
+<h3>内容</h3>
+
+<p>使用Markdown语法（<a href="http://wowubuntu.com/markdown/index.html">语法说明</a>）来写博客，也可以使用<a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">liquid template features</a> 。</p>
+
+<h3>生成和预览</h3>
+
+<pre><code class="sh">$ rake generate   # Generates posts and pages into the public directory
+$ rake watch      # Watches source/ and sass/ for changes and regenerates
+$ rake preview    # Watches, and mounts a webserver at http://localhost:4000
+</code></pre>
+
+<p><code>rake preview</code>是一个很好的功能，在发布博客之前可以先预览一下在页面的效果，进行修正。</p>
+
+<h2>其他好玩的</h2>
+
+<h3>为博客添加返回页面顶部的功能</h3>
+
+<p><a href="http://www.scrolltotop.com/">Scroll To Top</a>这个网站提供了很多返回页面顶部的Widget。</p>
+
+<p>在<code>source/_includes/custom</code>文件夹下新建一个<code>scroll_to_top.html</code>的HTML文件：</p>
+
+<p>```sh</p>
+
+<script type="text/javascript" src="http://arrow.scrolltotop.com/YOUR_CHOICE.js"></script>
+
+
+<p><noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+```</p>
+
+<p>接着在<code>source/_layouts/default.html</code>中引入该文件：</p>
+
+<pre><code class="sh"><script type="text/javascript" src="http://arrow.scrolltotop.com/arrow86.js"></script>
+<noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+</code></pre>
+
+<p>此时博客在右下角添加了一个返回页面顶部的button。</p>
+
+<h3>在首页添加“继续阅读”按钮</h3>
+
+<p>在博客中插入<code>&lt;!-- more --&gt;</code>后，在博客首页上，会把该标记之下的博客内容隐藏，点击<code>Read on →</code>按钮可以看到整篇博客。</p>
+
+<h2>小结</h2>
+
+<p>在Github上写博客可以分享知识给其他人，同时也是一个督促自己学习的好方法，毕竟搭建网站需要维护，而Github把这些替你做了，让自己可以专注注意力。当然也请善用，要善对这个平台。</p>
+
+<p>在搭建博客时如果有什么问题可以问我，水平有限，会尽力解答。</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://octopress.org/">Octopress</a></p></li>
+<li><p><a href="http://beyondvincent.com/2013/08/03/2013-08-03-108-creating-a-github-blog-using-octopress/">利用Octopress搭建一个Github博客</a></p></li>
+<li><p><a href="http://asaf.github.io/blog/2013/07/08/blogging-with-octopress-add-comments/">Blogging With Octopress: Add Comments</a></p></li>
+<li><p><a href="http://droidyue.com/blog/2014/08/03/integrate-scroll-to-top-in-octopress/">Octopress添加回到顶部功能</a></p></li>
+<li><p><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">3rd Party Octopress Themes</a></p></li>
+<li><p><a href="http://wowubuntu.com/markdown/index.html">Markdown 语法说明</a></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[使用git daemon来分享Git Repository]]></title>
+    <link href="http://boxingp.github.io/blog/2015/02/26/use-git-daemon-to-share-git-repository/"/>
+    <updated>2015-02-26T20:04:37+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/02/26/use-git-daemon-to-share-git-repository</id>
+    <content type="html"><![CDATA[<p>今天遇到一个问题，怎么在两台电脑之前分享Git Repo。之前的做法是使用AirDrop传输，或者用Skype发送。今天了解到一种新的方法，git提供了<code>git daemon</code>，可以很方便地分享本地Git Repo的读写权限。</p>
+
+<!-- more -->
+
+
+<p><code>git daemon</code>启动了一个TCP服务，通过<code>git://</code>协议分享Git Repo，默认的端口号是<code>9418</code>，它会监听该端口，提供服务。但是需要注意的是，这种方式是不安全的，通常只在安全的值得信赖的网络中使用。如果想要安全的解决方案，应该使用<a href="http://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols#The-SSH-Protocol">SSH协议</a>。</p>
+
+<p>步骤是：</p>
+
+<p>1.进入想要分享的Project目录：</p>
+
+<pre><code class="sh">$ cd Project
+</code></pre>
+
+<p>2.clone裸仓库：</p>
+
+<pre><code class="sh">$ git clone --bare Project Project.git
+</code></pre>
+
+<p>完成后，git会在当前目录下创建一个名为Project.git的目录。</p>
+
+<p>3.在Project.git目录下创建一个名为git-daemon-export-ok的文件：</p>
+
+<pre><code class="sh">$ touch cart.git/git-daemon-export-ok
+</code></pre>
+
+<p>这是为了让daemon知道只分享该Git Repo，也可以在运行<code>git daemon</code>时加上<code>--export-all</code>，这样所有的Git Repo都会被分享。</p>
+
+<p>4.将Project.git目录移动到你想要分享的目录中：</p>
+
+<pre><code class="sh">$ mv Project.git /Shared
+</code></pre>
+
+<p>5.运行<code>git daemon</code>命令：</p>
+
+<pre><code class="sh">$ git daemon --base-path=/Shared
+</code></pre>
+
+<p>这样就可以clone本地的Git Repo了：</p>
+
+<pre><code class="sh">$ git clone git://{Local Machine IP Address}/Project.git
+</code></pre>
+
+<p><code>-–base-path=</code>，所有的请求都是该path的相对链接，运行上面的<code>git clone</code>命令时，daemon会理解path为<code>/Shared/Project.git</code>。</p>
+
+<p>通过上述步骤，只能通过<code>git://</code>协议获得clone的权限，如果需要获得push的权限，可以在运行<code>git daemon</code>命令时加上<code>--enable=receive-pack</code>，或者进入<code>Shared/Project.git</code>目录，输入：</p>
+
+<pre><code class="sh">$ cd Shared/Project.git
+$ git config daemon.receivepack true
+</code></pre>
+
+<p>git会在当前目录下的config文件中添加以下配置：</p>
+
+<pre><code class="sh">[daemon]
+    receivepack = true
+</code></pre>
+
+<p>这时就可以允许其他用户拥有push的权限。默认上该权限是关闭的，因为使用的协议并未进行验证，也就是说任何人可以push任何东西到Git Repo中，包括清除它。这意味着只能在一个封闭的局域网中设置它。</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://git-scm.com/book/en/v2/Git-on-the-Server-Git-Daemon">Git on the Server - Git Daemon</a></p></li>
+<li><p><a href="http://git-scm.com/docs/git-daemon">Git - git-daemon Documentation</a></p></li>
+<li><p><a href="http://www.royee.net/archives/254">Git daemon服务器架设指南</a></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[更好地配置git Log]]></title>
+    <link href="http://boxingp.github.io/blog/2015/01/26/config-git-log-better/"/>
+    <updated>2015-01-26T18:45:06+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/01/26/config-git-log-better</id>
+    <content type="html"><![CDATA[<p><a href="http://git-scm.com/">Git</a>是一个分布式的版本控制软件，由Linux内核开发者<a href="http://en.wikipedia.org/wiki/Linus_Torvalds">Linus Torvalds</a>开发设计。这里多一句嘴，Linux和Git任意完成一个就可以留名青史，Linus一人包场了。<del>妈妈问我为什么跪着写完这篇博客。</del></p>
+
+<p>自己14年才开始使用Git，之前就是在本地很low地创建不同的文件夹来保存代码。使用Git后，<del>“Diff，Add我闭着眼，reset回退你沉醉了没”</del>可以很自由的对代码进行版本管理，而不用担心自己会丢失历史版本。</p>
+
+<p>Git中使用<code>git log</code>查看之前提交的commit日志。</p>
+
+<!-- more -->
+
+
+<p>一般来说，在repo中输入<code>git log</code>后：</p>
+
+<pre><code class="sh">$ git log
+</code></pre>
+
+<p>默认是这样的，会新打开一个page显示如下的信息：</p>
+
+<pre><code class="sh">commit ef22c6836e1201035c94c73c8f6c258bdb461146
+Author: BoxingP &lt;boxingp@gmail.com&gt;
+Date:   Mon Jan 26 18:28:40 2015 +0800
+
+    BLOG-6: add disqus comment in blog. Boxing
+
+commit 32a27ef992743dff90db6ee925e6a680b1c3f995
+Author: BoxingP &lt;boxingp@gmail.com&gt;
+Date:   Mon Jan 26 17:32:44 2015 +0800
+
+    BLOG-5: add google analytics in blog. Boxing
+
+commit c089cec96eba70079152889a1f6a87be8893af48
+Author: BoxingP &lt;boxingp@gmail.com&gt;
+Date:   Mon Jan 26 17:04:54 2015 +0800
+
+    BLOG-4: use solarized dark style. Boxing
+
+commit 8011bdb7e814a8b43309116d0810d1e0ca8097c1
+Author: BoxingP &lt;boxingp@gmail.com&gt;
+Date:   Mon Jan 26 02:15:33 2015 +0800
+
+    BLOG-3: update .gitignore. Boxing
+
+:
+</code></pre>
+
+<p><code>git log</code>会按提交时间列出所有的commits，最近的commit排在最上面。每次的commit都有一个SHA-1校验和、作者的名字和电子邮件地址、提交时间，最后缩进一个段落显示commit说明。信息很详细，但是在使用时显得很多，容易分散注意力。<code>git log</code>有很多选项可以帮助我们更好地工作，进行一定的配置后更加方便我们<del>啪啪啪</del>写代码。</p>
+
+<p>经常使用的是<code>format</code>，可以定制要显示的记录格式，这样的输出便于后期编程提取分析，例如：
+<code>sh
+$ git log --pretty=format:"%h -%d %s (%cr) &lt;%an&gt;"
+</code></p>
+
+<pre><code>ef22c68 - (HEAD, origin/source, source) BLOG-6: add disqus comment in blog. Boxing (3 hours ago) &lt;BoxingP&gt;
+32a27ef - BLOG-5: add google analytics in blog. Boxing (4 hours ago) &lt;BoxingP&gt;
+c089cec - BLOG-4: use solarized dark style. Boxing (4 hours ago) &lt;BoxingP&gt;
+8011bdb - BLOG-3: update .gitignore. Boxing (19 hours ago) &lt;BoxingP&gt;
+:
+</code></pre>
+
+<p>下面列出了常用的格式占位符写法及其代表的意义：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;"> <strong>选项</strong> </th>
+<th style="text-align:left;"> <strong>：说明</strong> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;"> <code>%H</code> </td>
+<td style="text-align:left;"> ：提交对象（commit）的完整哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%h</code> </td>
+<td style="text-align:left;"> ：提交对象（commit）的简短哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%T</code> </td>
+<td style="text-align:left;"> ：树对象（tree）的完整哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%t</code> </td>
+<td style="text-align:left;"> ：树对象（tree）的简短哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%P</code> </td>
+<td style="text-align:left;"> ：父对象（parent）的完整哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%p</code> </td>
+<td style="text-align:left;"> ：父对象（parent）的简短哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%an</code> </td>
+<td style="text-align:left;"> ：作者（author）的名字 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%ae</code> </td>
+<td style="text-align:left;"> ：作者的电子邮件地址 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%ad</code> </td>
+<td style="text-align:left;"> ：作者修订日期 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%ar</code> </td>
+<td style="text-align:left;"> ：作者修订日期，按多久以前的方式显示 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%cn</code> </td>
+<td style="text-align:left;"> ：提交者（committer）的名字 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%ce</code> </td>
+<td style="text-align:left;"> ：提交者的电子邮件地址 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%cd</code> </td>
+<td style="text-align:left;"> ：提交日期 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%cr</code> </td>
+<td style="text-align:left;"> ：提交日期，按多久以前的方式显示 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%d</code> </td>
+<td style="text-align:left;"> ：对应的branch分支名 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%s</code> </td>
+<td style="text-align:left;"> ：提交说明 </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>使用<code>format</code>时结合<code>--graph</code>选项，可以看到开头多出一些ASCII字符串表示的简单图形，形象地展示了每次提交所在的分支及其分化衍合情况：</p>
+
+<pre><code class="sh">$ git log --graph --pretty=format:"%h -%d %s (%cr) &lt;%an&gt;"
+</code></pre>
+
+<pre><code class="sh">* ef22c68 - (HEAD, origin/source, source) BLOG-6: add disqus comment in blog. Boxing (4 hours ago) &lt;BoxingP&gt;
+* 32a27ef - BLOG-5: add google analytics in blog. Boxing (5 hours ago) &lt;BoxingP&gt;
+* c089cec - BLOG-4: use solarized dark style. Boxing (5 hours ago) &lt;BoxingP&gt;
+* 8011bdb - BLOG-3: update .gitignore. Boxing (20 hours ago) &lt;BoxingP&gt;
+:
+</code></pre>
+
+<p>下面列出了一些常用的选项及其释义：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;"> <strong>选项</strong> </th>
+<th style="text-align:left;"> <strong>：说明</strong> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;"> <code>-p</code> </td>
+<td style="text-align:left;"> ：按补丁格式显示每个更新之间的差异 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--word-diff</code> </td>
+<td style="text-align:left;"> ：按word diff格式显示差异 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--stat</code> </td>
+<td style="text-align:left;"> ：显示每次更新的文件修改统计信息 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--shortstat</code> </td>
+<td style="text-align:left;"> ：只显示&ndash;stat中最后的行数修改添加移除统计 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--name-only</code> </td>
+<td style="text-align:left;"> ：仅在提交信息后显示已修改的文件清单 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--name-status</code> </td>
+<td style="text-align:left;"> ：显示新增、修改、删除的文件清单 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--abbrev-commit</code> </td>
+<td style="text-align:left;"> ：仅显示SHA-1的前几个字符，而非所有的40个字符 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--relative-date</code> </td>
+<td style="text-align:left;"> ：使用较短的相对时间显示（比如，“2 weeks ago”） </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--graph</code> </td>
+<td style="text-align:left;"> ：显示ASCII图形表示的分支合并历史 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--pretty</code> </td>
+<td style="text-align:left;"> ：使用其他格式显示历史提交信息，可用的选项包括oneline，short，full，fuller和format（后跟指定格式） </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>更多的资料可以在<a href="http://git-scm.com/docs/git-log">git-log</a>中查看。</p>
+
+<p>如果每次在查看commit日志时都需要加上这些选项，会很麻烦。我们可以设置一个简单的alias。一般来说，上面的命令命名为<code>git lg</code>，当然叫什么取决个人喜好。在设置好后，输入<code>git lg</code>就会看到和之前一致的输出了。</p>
+
+<pre><code class="sh">$ git config --global alias.lg "log --graph --pretty=format:'%h -%d %s (%cr) &lt;%an&gt;'"
+$ git lg
+</code></pre>
+
+<pre><code>* ef22c68 - (HEAD, origin/source, source) BLOG-6: add disqus comment in blog. Boxing (4 hours ago) &lt;BoxingP&gt;
+* 32a27ef - BLOG-5: add google analytics in blog. Boxing (5 hours ago) &lt;BoxingP&gt;
+* c089cec - BLOG-4: use solarized dark style. Boxing (5 hours ago) &lt;BoxingP&gt;
+* 8011bdb - BLOG-3: update .gitignore. Boxing (20 hours ago) &lt;BoxingP&gt;
+:
+</code></pre>
+
+<p>我们可以看到每次的输出会在一个新的page显示，需要输入<code>q</code>才能退出。我们可以在设置alias时增加一条<code>--no-pager</code>的选项，让输出和输入的命令在同一page下显示。此时，可能commit的日志很多，可以增加一条<code>-6</code>的选项将显示的日志数量限制在6。
+<code>sh
+$ git config --global alias.lg "!git --no-pager log -6 --graph --pretty=format:'%h -%d %s (%cr) &lt;%an&gt;'"
+$ git lg
+* ef22c68 - (HEAD, origin/source, source) BLOG-6: add disqus comment in blog. Boxing (4 hours ago) &lt;BoxingP&gt;
+* 32a27ef - BLOG-5: add google analytics in blog. Boxing (5 hours ago) &lt;BoxingP&gt;
+* c089cec - BLOG-4: use solarized dark style. Boxing (6 hours ago) &lt;BoxingP&gt;
+* 8011bdb - BLOG-3: update .gitignore. Boxing (20 hours ago) &lt;BoxingP&gt;
+* b113f3f - BLOG-2: create a new blog about managing java versions with jenv. Boxing (21 hours ago) &lt;BoxingP&gt;
+* 85d8807 - BLOG-1: init blog by using octopress. Boxing (2 days ago) &lt;BoxingP&gt;%
+$
+</code>
+此外，你可以对输出结果的颜色进行设置，使输出结果更直观。毕竟工具就是为了让人可以将注意力更多关注到有产出的工作上，而不被其他东西分散。</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://git-scm.com/">Git官网</a></p></li>
+<li><p><a href="http://luolei.org/better-git-log/">更好的git log</a></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在OS X中使用jEnv管理多个Java版本]]></title>
+    <link href="http://boxingp.github.io/blog/2015/01/25/manage-multiple-versions-of-java-on-os-x/"/>
+    <updated>2015-01-25T23:16:17+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/01/25/manage-multiple-versions-of-java-on-os-x</id>
+    <content type="html"><![CDATA[<p>使用Java时会接触到不同的版本。大多数时候我在使用Java 8，但是因为某些框架或是工具的要求，这时不得不让Java 6上前线。一般情况下是配置JAVA_HOME，指定不同的Java版本，但是这需要人为手动的输入。如果又要选择其他版本，就需要对JAVA_HOME重新进行设置。这十分麻烦，所以在做这些操作时真是“会呼吸的痛”。终于，我发现了<a href="http://www.jenv.be/">jEnv</a>。</p>
+
+<p>正如它的官网所宣称的那样，它是来让你忘记怎么配置JAVA_HOME环境变量的神队友。使用简单的命令就可以在不同的Java版本之间进行切换。如果你使用过rbenv，你会发现jEnv就如同<a href="https://github.com/sstephenson/rbenv">rbenv</a>的Java版一样。</p>
+
+<!-- more -->
+
+
+<p><strong>基本使用:</strong></p>
+
+<p>在Mac OS X下使用<a href="http://brew.sh/">Homebrew</a>安装jEnv：</p>
+
+<pre><code class="sh">$ brew install jenv
+</code></pre>
+
+<p>安装成功后需要进行一下简单的配置，让它可以起作用：</p>
+
+<p>使用Bash的情况
+<code>sh
+$ echo 'export PATH="$HOME/.jenv/bin:$PATH"' &gt;&gt; ~/.bash_profile
+$ echo 'eval "$(jenv init -)"' &gt;&gt; ~/.bash_profile
+</code>
+使用Zsh的情况
+<code>sh
+$ echo 'export PATH="$HOME/.jenv/bin:$PATH"' &gt;&gt; ~/.zshrc
+$ echo 'eval "$(jenv init -)"' &gt;&gt; ~/.zshrc
+</code></p>
+
+<p>好了，jEnv已经安装好了，让我们来看一下它找见哪个Java版本了：
+<code>sh
+$ jenv versions
+* system (set by /Users/bxpeng/.jenv/version)
+</code>
+它只找到了系统默认的Java，即使我已经下载了其他版本的Java。<code>*</code>表示当前选择的版本。</p>
+
+<p>和rbenv不同的是，jEnv不能自己安装任何版本的Java，所以需要我们手动安装好之后再用jEnv指向它们。</p>
+
+<p>安装Java 6，需要在<a href="http://support.apple.com/kb/DL1572">Apple</a>进行下载。它将安装到<code>/System/Library/Java/JavaVirtualMachines/</code>下；
+安装Java 7，可以在<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html">Oracle</a>进行下载.它将安装到<code>/Library/Java/JavaVirtualMachines/</code>下；
+安装Java 8，可以在<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Oracle</a>进行下载.它将安装到<code>/Library/Java/JavaVirtualMachines/</code>下。</p>
+
+<p>使用<code>jenv add</code>将Java 6加入jenv中：
+<code>sh
+$ jenv add /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/
+1.6 added
+1.6.0.65 added
+oracle64-1.6.0.65 added
+</code>
+运行<code>jenv versions</code>时会显示：
+<code>sh
+$ jenv versions
+* system (set by /Users/bxpeng/.jenv/version)
+  1.6
+  1.6.0.65
+  oracle64-1.6.0.65
+</code>
+同样的，使用<code>jenv add</code>将Java 7加入jenv中：
+<code>sh
+$ jenv add /Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home/
+1.7 added
+1.7.0.71 added
+oracle64-1.7.0.71 added
+</code>
+<code>sh
+$ jenv add /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home/
+1.8 added
+1.8.0.25 added
+oracle64-1.8.0.25 added
+</code>
+现在运行<code>jenv versions</code>会显示：
+<code>sh
+$ jenv versions
+* system (set by /Users/bxpeng/.jenv/version)
+  1.6
+  1.6.0.65
+  oracle64-1.6.0.65
+  1.7
+  1.7.0.71
+  oracle64-1.7.0.71
+  1.8
+  1.8.0.25
+  oracle64-1.8.0.25
+</code>
+对于博主这种不是处女座的人来说，也觉得需要对版本再管理一下，使用<code>jenv remove</code>可以从jEnv中去掉不需要的Java版本：
+<code>sh
+$ jenv remove 1.6
+JDK 1.6 removed
+</code>
+整理后，再运行<code>jenv versions</code>会显示：
+<code>sh
+$ jenv versions
+* system (set by /Users/bxpeng/.jenv/version)
+  1.6.0.65
+  1.7.0.71
+  1.8.0.25
+</code>
+选择一个Java版本，运行<code>jenv local</code>，例如：
+<code>sh
+$ jenv local 1.8.0.25
+$ java -version
+java version "1.8.0_25"
+Java(TM) SE Runtime Environment (build 1.8.0_25-b17)
+Java HotSpot(TM) 64-Bit Server VM (build 25.25-b02, mixed mode)
+</code>
+DangDangDangDang，我们已经成功地指定了某文件夹中local的Java版本。</p>
+
+<p>你可以运行<code>jenv global</code>设置一个默认的Java版本，运行<code>jenv which java</code>显示可执行的Java的完整路径。</p>
+
+<p>你也可以在特定的文件夹下使用.java-version文件来设定Java的版本。当我需要在Project中使用Java 6时，我仅仅需要把<code>1.6.0.65</code>作为内容保存在.java-version文件中，当我进入该文件夹时jEnv会自动地帮助我设定local的Java的版本。</p>
+
+<p>没错，我们现在有了Java的多个版本，并且可以在它们之间轻松切换。更多的使用方法可以在<a href="http://www.jenv.be/">jEnv官网</a>的官网查询到。</p>
+
+<p><strong>参考文献:</strong></p>
+
+<ol>
+<li><a href="http://www.jenv.be/">jEnv官网</a></li>
+<li><a href="http://andrew-jones.com/blog/managing-multiple-versions-of-java-on-os-x/">Managing multiple versions of Java on OS X</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

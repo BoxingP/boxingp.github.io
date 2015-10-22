@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>使用git daemon来分享Git Repository - Rain-driven Development</title>
+  <meta name="author" content="Boxing">
+
+  
+  <meta name="description" content="今天遇到一个问题，怎么在两台电脑之前分享Git Repo。之前的做法是使用AirDrop传输，或者用Skype发送。今天了解到一种新的方法，git提供了git daemon，可以很方便地分享本地Git Repo的读写权限。 git daemon启动了一个TCP服务，通过git://协议分享Git &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://boxingp.github.io/blog/2015/02/26/use-git-daemon-to-share-git-repository">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Rain-driven Development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58940494-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Rain-driven Development</a></h1>
+  
+    <h2>雨驱动开发</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="boxingp.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">使用git daemon来分享Git Repository</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T20:04:37+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:04 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>今天遇到一个问题，怎么在两台电脑之前分享Git Repo。之前的做法是使用AirDrop传输，或者用Skype发送。今天了解到一种新的方法，git提供了<code>git daemon</code>，可以很方便地分享本地Git Repo的读写权限。</p>
+
+<!-- more -->
+
+
+<p><code>git daemon</code>启动了一个TCP服务，通过<code>git://</code>协议分享Git Repo，默认的端口号是<code>9418</code>，它会监听该端口，提供服务。但是需要注意的是，这种方式是不安全的，通常只在安全的值得信赖的网络中使用。如果想要安全的解决方案，应该使用<a href="http://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols#The-SSH-Protocol">SSH协议</a>。</p>
+
+<p>步骤是：</p>
+
+<p>1.进入想要分享的Project目录：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>Project
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.clone裸仓库：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone --bare Project Project.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>完成后，git会在当前目录下创建一个名为Project.git的目录。</p>
+
+<p>3.在Project.git目录下创建一个名为git-daemon-export-ok的文件：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>touch cart.git/git-daemon-export-ok
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这是为了让daemon知道只分享该Git Repo，也可以在运行<code>git daemon</code>时加上<code>--export-all</code>，这样所有的Git Repo都会被分享。</p>
+
+<p>4.将Project.git目录移动到你想要分享的目录中：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mv Project.git /Shared
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>5.运行<code>git daemon</code>命令：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git daemon --base-path<span class="o">=</span>/Shared
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样就可以clone本地的Git Repo了：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://<span class="o">{</span>Local Machine IP Address<span class="o">}</span>/Project.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>-–base-path=</code>，所有的请求都是该path的相对链接，运行上面的<code>git clone</code>命令时，daemon会理解path为<code>/Shared/Project.git</code>。</p>
+
+<p>通过上述步骤，只能通过<code>git://</code>协议获得clone的权限，如果需要获得push的权限，可以在运行<code>git daemon</code>命令时加上<code>--enable=receive-pack</code>，或者进入<code>Shared/Project.git</code>目录，输入：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>Shared/Project.git
+</span><span class='line'><span class="nv">$ </span>git config daemon.receivepack <span class="nb">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>git会在当前目录下的config文件中添加以下配置：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>daemon<span class="o">]</span>
+</span><span class='line'>    <span class="nv">receivepack</span> <span class="o">=</span> <span class="nb">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这时就可以允许其他用户拥有push的权限。默认上该权限是关闭的，因为使用的协议并未进行验证，也就是说任何人可以push任何东西到Git Repo中，包括清除它。这意味着只能在一个封闭的局域网中设置它。</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://git-scm.com/book/en/v2/Git-on-the-Server-Git-Daemon">Git on the Server - Git Daemon</a></p></li>
+<li><p><a href="http://git-scm.com/docs/git-daemon">Git - git-daemon Documentation</a></p></li>
+<li><p><a href="http://www.royee.net/archives/254">Git daemon服务器架设指南</a></p></li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Boxing
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T20:04:37+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:04 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/tool/'>tool</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/24/use-equals-and-hashcode-methods-in-java-correctly/" title="Previous Post: 在Java中正确地使用equals()和hashCode()方法">&laquo; 在Java中正确地使用equals()和hashCode()方法</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/27/the-agile-software-development-reading-notes/" title="Next Post: 《敏捷软件开发：原则、模式与实践》读书笔记">《敏捷软件开发：原则、模式与实践》读书笔记 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Boxing -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'raindrivendevelopment';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://boxingp.github.io/blog/2015/02/26/use-git-daemon-to-share-git-repository/';
+        var disqus_url = 'http://boxingp.github.io/blog/2015/02/26/use-git-daemon-to-share-git-repository/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="http://arrow.scrolltotop.com/arrow86.js"></script>
+<noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+</body>
+</html>

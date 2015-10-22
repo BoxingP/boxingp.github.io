@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Color | Rain-driven Development]]></title>
+  <link href="http://boxingp.github.io/blog/categories/color/atom.xml" rel="self"/>
+  <link href="http://boxingp.github.io/"/>
+  <updated>2015-10-23T03:30:41+08:00</updated>
+  <id>http://boxingp.github.io/</id>
+  <author>
+    <name><![CDATA[Boxing]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[中国传统颜色]]></title>
+    <link href="http://boxingp.github.io/blog/2015/04/01/traditional-chinese-colors/"/>
+    <updated>2015-04-01T00:02:56+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/04/01/traditional-chinese-colors</id>
+    <content type="html"><![CDATA[<p>自己写的一个展示中国传统颜色的页面。方便设计时对颜色的查找。点击标题跳转，或者<a href="http://boxingp.github.io/traditional-chinese-colors/">戳我戳我</a>。</p>
+]]></content>
+  </entry>
+  
+</feed>

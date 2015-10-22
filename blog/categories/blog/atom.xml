@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Blog | Rain-driven Development]]></title>
+  <link href="http://boxingp.github.io/blog/categories/blog/atom.xml" rel="self"/>
+  <link href="http://boxingp.github.io/"/>
+  <updated>2015-10-23T03:30:41+08:00</updated>
+  <id>http://boxingp.github.io/</id>
+  <author>
+    <name><![CDATA[Boxing]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用Octopress在Github上搭建个人博客]]></title>
+    <link href="http://boxingp.github.io/blog/2015/03/29/create-personal-blog-in-github-by-using-octopress/"/>
+    <updated>2015-03-29T20:08:49+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/03/29/create-personal-blog-in-github-by-using-octopress</id>
+    <content type="html"><![CDATA[<p>在Github上像是写代码一样写博客有一段时间了，有必要把搭建博客的方法整理一下，方便更多的人DIY，享受一下“博客驱动开发”。</p>
+
+<p><img src="/images/2015/logo.png"></p>
+
+<!-- more -->
+
+
+<p><a href="http://octopress.org/">Octopress</a>是<a href="http://brandonmathis.com/">Brandon Mathis</a>在<a href="http://github.com/mojombo/jekyll">Jekyll</a>上开发的，利用<a href="http://pages.github.com/">Github Pages</a>来展示静态页面。</p>
+
+<p>正如Octopress网站所说的</p>
+
+<blockquote><p>Octopress is a blogging framework for hackers. You should be comfortable running shell commands and familiar with the basics of Git.</p></blockquote>
+
+<p>所以如果你不喜欢这种方式，可以选择其他博客平台或框架，毕竟工具就是为了让我们效率最大化而不是造成困惑。</p>
+
+<p>本文是基于OS X系统进行介绍的。</p>
+
+<h2>准备工作</h2>
+
+<ol>
+<li><p>安装Git。</p></li>
+<li><p>安装Ruby 1.9.3。</p></li>
+</ol>
+
+
+<p>在Mac上使用<a href="http://brew.sh/">brew</a>安装Git：</p>
+
+<pre><code class="sh">$ brew install git
+</code></pre>
+
+<p>同样的，使用brew安装<a href="https://github.com/sstephenson/rbenv">rbenv</a>之后，使用rbenv安装所需要的Ruby版本：</p>
+
+<pre><code class="sh">$ brew install rbenv
+$ rbenv install 1.9.3-p194
+$ rbenv local 1.9.3-p194
+$ rbenv rehash
+</code></pre>
+
+<p>安装好后可以进行验证：
+<code>sh
+$ git version
+$ rbenv version
+</code></p>
+
+<h2>搭建博客</h2>
+
+<p>首先使用Git将Octopress从Github上clone到本地：</p>
+
+<pre><code class="sh">$ git clone git@github.com:imathis/octopress.git octopress
+$ cd octopress
+</code></pre>
+
+<p>紧接着，安装依赖：</p>
+
+<pre><code class="sh">$ gem install bundler
+$ rbenv rehash
+$ bundle install
+</code></pre>
+
+<p>安装默认的Octopress主题：</p>
+
+<pre><code class="sh">$ rake install
+</code></pre>
+
+<h2>选择博客主题</h2>
+
+<p>有很多第三方的Octopress主题可供选择——<a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">3rd Party Octopress Themes</a>。</p>
+
+<p>通过<code>git submodule add</code>将需要的主题项目加为子模块，接着安装主题：</p>
+
+<pre><code class="sh">$ git submodule add GIT_URL .themes/THEME_NAME
+$ rake install['THEME_NAME']
+$ rake generate
+</code></pre>
+
+<p>我的博客使用的是<code>whiterspace</code>主题。</p>
+
+<h2>配置博客</h2>
+
+<p>正如Octopress的作者所说的，大部分情况下只需要修改<code>Rakefile</code>和<code>_config.yml</code>就可以了。其中<code>Rakefile</code>是和部署有关的，除非你使用rsync，否则不需要动它。</p>
+
+<p>在<code>_config.yml</code>中，需要对三个部分进行配置。</p>
+
+<h3>主要配置</h3>
+
+<pre><code class="sh">url:                # For rewriting urls for RSS, etc
+title:              # Used in the header and title tags
+subtitle:           # A description used in the header
+author:             # Your name, for RSS, Copyright, Metadata
+simple_search:      # Search engine for simple site search
+description:        # A default meta description for your site
+date_format:        # Format dates using Ruby's date strftime syntax
+subscribe_rss:      # Url for your blog's feed, defauts to /atom.xml
+subscribe_email:    # Url to subscribe by email (service required)
+category_feeds:     # Enable per category RSS feeds (defaults to false in 2.1)
+email:              # Email address for the RSS feed if you want it.
+</code></pre>
+
+<h3>Jekyll和Plugins</h3>
+
+<p>这是和Jekyll和Plugins有关的，详情见<a href="http://octopress.org/docs/configuring/">Configuring Octopress</a>。</p>
+
+<h3>第三方组件</h3>
+
+<p>这些第三方组件是包含在Octopress中的，只需要配置好就可以添加到自己的博客中。</p>
+
+<ul>
+<li><p>Github：在sidebar中列出你的Github Repo。</p></li>
+<li><p>Twitter：添加一个分享到Twitter的按钮。</p></li>
+<li><p>Google Plus One：设置分享到Google +1。</p></li>
+<li><p>Pinboard：在sidebar中分享你最近的<a href="https://pinboard.in/">Pinboard</a>书签。</p></li>
+<li><p>Delicious：在sidebar中分享你最近的<a href="https://delicious.com/">Delicious</a>书签。</p></li>
+<li><p>Disqus Comments：访问<a href="https://disqus.com/">Disqus</a>，创建好账号登录后点击<code>Settings</code>，点击<code>Admin</code>，就可以为个人博客站点创建一个short name，把它添加到<code>_config.yml</code>中的<code>disqus_short_name</code>后面就可以在个人博客中使用Disqus进行评论。</p></li>
+<li><p>Google Analytics：在<a href="http://www.google.com/analytics/">Google Analytics</a>中获取跟踪ID，把它添加到<code>_config.yml</code>中的<code>google_analytics_tracking_id</code>后面就可以使用Google Analytics对个人博客进行分析统计。</p></li>
+<li><p>Facebook：添加Facebook<code>like</code>按钮。</p></li>
+</ul>
+
+
+<h2>部署博客</h2>
+
+<h3>使用Github User/Organization pages</h3>
+
+<p>Github的<a href="http://pages.github.com/">Pages service</a>允许我们为自己的Repo创建展示页面。我们使用<code>http://USER_NAME.github.io</code>作为博客的地址，当然你也可以使用自己的域名（<a href="http://octopress.org/docs/deploying/github/#custom_domains">怎么做</a>）。</p>
+
+<p>首先，我们在Github上新建一个Repo，把它命名为<code>USER_NAME.github.io</code>，其中<code>USER_NAME</code>是你在Github上的用户名。这是为了把<code>master</code>branch作为web server，使用<code>http://USER_NAME.github.io</code>链接展示你的页面。也就是说你需要在<code>source</code>branch上进行工作，并把生成的内容push到<code>master</code>branch上。</p>
+
+<p>如果你觉的这些好麻烦，没事，Octopress会用一个配置task来帮助你把它们做好：</p>
+
+<pre><code class="sh">$ rake setup_github_pages
+</code></pre>
+
+<p>这个rake task会问你要Github Repo的URL。把上面我们新建的Repo的SSH或者HTTPS URL复制到这里（e.g. git@github.com:USER_NAME/USER_NAME.github.io.git）。</p>
+
+<p>接着，它会为你做以下这些：</p>
+
+<ul>
+<li><p>存储你的Github Pages仓库URL。</p></li>
+<li><p>把指向imathis/octopress的remote由<code>origin</code>重命名为<code>octopress</code>。</p></li>
+<li><p>把你的Github Pages仓库作为默认的<code>origin</code>remote。</p></li>
+<li><p>把<code>active</code>branch从<code>master</code>切换到<code>source</code>。</p></li>
+<li><p>使你的博客URL与你的仓库一致。</p></li>
+<li><p>在<code>_deploy</code>文件夹中设置一个<code>master</code>branch用来部署。</p></li>
+</ul>
+
+
+<p>紧接着运行：</p>
+
+<pre><code class="sh">$ rake generate
+$ rake deploy
+</code></pre>
+
+<p>它们会生成你的博客，把生成的文件复制到<code>_deploy</code>中，把它们添加到git，commit然后push到<code>master</code>branch。</p>
+
+<p>最后用浏览器打开<code>http://USER_NAME.github.io</code>，你就会看见自己的博客了。首次push可能会花费一段时间等待Github为你生成页面。</p>
+
+<p>当然不要忘记把更改的文件push到<code>source</code>branch上：</p>
+
+<pre><code class="sh">$ git add .
+$ git commit -m 'YOUR_MESSAGE'
+$ git push origin source
+</code></pre>
+
+<h3>使用Github Project pages (gh-pages)</h3>
+
+<p>Github的Project Pages服务允许你为你的已存在的Repo提供一个站点。它会在你的Repo中寻找<code>gh-pages</code>branch，把上面的内容在这个链接中展示<code>http://USER_NAME.github.io/REPO_NAME</code>。</p>
+
+<p>和上面步骤一致，只不过在运行<code>rake setup_github_pages</code>后输入的是已存在Repo的URL。</p>
+
+<p>这个的好处是可以把<code>http://USER_NAME.github.io</code>留下来以后再使用，比如个人主页什么的。</p>
+
+<h2>开始写博客</h2>
+
+<h3>博客</h3>
+
+<p>博客存储在<code>source/_posts</code>文件夹中，并按照Jekyll的惯例进行命名: <code>YYYY-MM-DD-post-title.markdown</code>。文件的名字会被用作URL的一部分，日期会用来对文件进行区分和排序。</p>
+
+<p>Octopress提供一个rake task来生成一篇新的博客：</p>
+
+<pre><code class="sh">$ rake new_post["NEW_TITLE"]
+</code></pre>
+
+<p>创建好的文件默认是<code>.markdown</code>格式。</p>
+
+<p>用编辑器打开一篇博客，开头的<a href="http://jekyllrb.com/docs/frontmatter/">Front Matter</a>会告诉Jekyll如何处理博客和页面。</p>
+
+<pre><code class="sh">---
+layout: post
+title: "POST_TITLE"
+date: POST_DATA
+comments: true
+external-url:
+categories:
+---
+</code></pre>
+
+<p>你可以关闭评论也可以为博客添加标签。如果还在打草稿，可以添加<code>published: false</code>以免它在生成文件时被发布。你可以添加一个标签也可以添加多个标签：</p>
+
+<pre><code class="sh"># One category
+categories: Sass
+
+# Multiple categories example 1
+categories: [CSS3, Sass, Media Queries]
+
+# Multiple categories example 2
+categories:
+- CSS3
+- Sass
+- Media Queries
+</code></pre>
+
+<h3>内容</h3>
+
+<p>使用Markdown语法（<a href="http://wowubuntu.com/markdown/index.html">语法说明</a>）来写博客，也可以使用<a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">liquid template features</a> 。</p>
+
+<h3>生成和预览</h3>
+
+<pre><code class="sh">$ rake generate   # Generates posts and pages into the public directory
+$ rake watch      # Watches source/ and sass/ for changes and regenerates
+$ rake preview    # Watches, and mounts a webserver at http://localhost:4000
+</code></pre>
+
+<p><code>rake preview</code>是一个很好的功能，在发布博客之前可以先预览一下在页面的效果，进行修正。</p>
+
+<h2>其他好玩的</h2>
+
+<h3>为博客添加返回页面顶部的功能</h3>
+
+<p><a href="http://www.scrolltotop.com/">Scroll To Top</a>这个网站提供了很多返回页面顶部的Widget。</p>
+
+<p>在<code>source/_includes/custom</code>文件夹下新建一个<code>scroll_to_top.html</code>的HTML文件：</p>
+
+<p>```sh</p>
+
+<script type="text/javascript" src="http://arrow.scrolltotop.com/YOUR_CHOICE.js"></script>
+
+
+<p><noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+```</p>
+
+<p>接着在<code>source/_layouts/default.html</code>中引入该文件：</p>
+
+<pre><code class="sh"><script type="text/javascript" src="http://arrow.scrolltotop.com/arrow86.js"></script>
+<noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+</code></pre>
+
+<p>此时博客在右下角添加了一个返回页面顶部的button。</p>
+
+<h3>在首页添加“继续阅读”按钮</h3>
+
+<p>在博客中插入<code>&lt;!-- more --&gt;</code>后，在博客首页上，会把该标记之下的博客内容隐藏，点击<code>Read on →</code>按钮可以看到整篇博客。</p>
+
+<h2>小结</h2>
+
+<p>在Github上写博客可以分享知识给其他人，同时也是一个督促自己学习的好方法，毕竟搭建网站需要维护，而Github把这些替你做了，让自己可以专注注意力。当然也请善用，要善对这个平台。</p>
+
+<p>在搭建博客时如果有什么问题可以问我，水平有限，会尽力解答。</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://octopress.org/">Octopress</a></p></li>
+<li><p><a href="http://beyondvincent.com/2013/08/03/2013-08-03-108-creating-a-github-blog-using-octopress/">利用Octopress搭建一个Github博客</a></p></li>
+<li><p><a href="http://asaf.github.io/blog/2013/07/08/blogging-with-octopress-add-comments/">Blogging With Octopress: Add Comments</a></p></li>
+<li><p><a href="http://droidyue.com/blog/2014/08/03/integrate-scroll-to-top-in-octopress/">Octopress添加回到顶部功能</a></p></li>
+<li><p><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">3rd Party Octopress Themes</a></p></li>
+<li><p><a href="http://wowubuntu.com/markdown/index.html">Markdown 语法说明</a></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

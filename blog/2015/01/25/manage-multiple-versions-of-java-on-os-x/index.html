@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>在OS X中使用jEnv管理多个Java版本 - Rain-driven Development</title>
+  <meta name="author" content="Boxing">
+
+  
+  <meta name="description" content="使用Java时会接触到不同的版本。大多数时候我在使用Java 8，但是因为某些框架或是工具的要求，这时不得不让Java 6上前线。一般情况下是配置JAVA_HOME，指定不同的Java版本，但是这需要人为手动的输入。如果又要选择其他版本，就需要对JAVA_HOME重新进行设置。这十分麻烦， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://boxingp.github.io/blog/2015/01/25/manage-multiple-versions-of-java-on-os-x">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Rain-driven Development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58940494-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Rain-driven Development</a></h1>
+  
+    <h2>雨驱动开发</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="boxingp.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">在OS X中使用jEnv管理多个Java版本</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-25T23:16:17+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:16 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>使用Java时会接触到不同的版本。大多数时候我在使用Java 8，但是因为某些框架或是工具的要求，这时不得不让Java 6上前线。一般情况下是配置JAVA_HOME，指定不同的Java版本，但是这需要人为手动的输入。如果又要选择其他版本，就需要对JAVA_HOME重新进行设置。这十分麻烦，所以在做这些操作时真是“会呼吸的痛”。终于，我发现了<a href="http://www.jenv.be/">jEnv</a>。</p>
+
+<p>正如它的官网所宣称的那样，它是来让你忘记怎么配置JAVA_HOME环境变量的神队友。使用简单的命令就可以在不同的Java版本之间进行切换。如果你使用过rbenv，你会发现jEnv就如同<a href="https://github.com/sstephenson/rbenv">rbenv</a>的Java版一样。</p>
+
+<!-- more -->
+
+
+<p><strong>基本使用:</strong></p>
+
+<p>在Mac OS X下使用<a href="http://brew.sh/">Homebrew</a>安装jEnv：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>brew install jenv
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>安装成功后需要进行一下简单的配置，让它可以起作用：</p>
+
+<p>使用Bash的情况</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;export PATH=&quot;$HOME/.jenv/bin:$PATH&quot;&#39;</span> &gt;&gt; ~/.bash_profile
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;eval &quot;$(jenv init -)&quot;&#39;</span> &gt;&gt; ~/.bash_profile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用Zsh的情况</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;export PATH=&quot;$HOME/.jenv/bin:$PATH&quot;&#39;</span> &gt;&gt; ~/.zshrc
+</span><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;eval &quot;$(jenv init -)&quot;&#39;</span> &gt;&gt; ~/.zshrc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>好了，jEnv已经安装好了，让我们来看一下它找见哪个Java版本了：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv versions
+</span><span class='line'>* system <span class="o">(</span><span class="nb">set </span>by /Users/bxpeng/.jenv/version<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>它只找到了系统默认的Java，即使我已经下载了其他版本的Java。<code>*</code>表示当前选择的版本。</p>
+
+<p>和rbenv不同的是，jEnv不能自己安装任何版本的Java，所以需要我们手动安装好之后再用jEnv指向它们。</p>
+
+<p>安装Java 6，需要在<a href="http://support.apple.com/kb/DL1572">Apple</a>进行下载。它将安装到<code>/System/Library/Java/JavaVirtualMachines/</code>下；
+安装Java 7，可以在<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html">Oracle</a>进行下载.它将安装到<code>/Library/Java/JavaVirtualMachines/</code>下；
+安装Java 8，可以在<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Oracle</a>进行下载.它将安装到<code>/Library/Java/JavaVirtualMachines/</code>下。</p>
+
+<p>使用<code>jenv add</code>将Java 6加入jenv中：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv add /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/
+</span><span class='line'>1.6 added
+</span><span class='line'>1.6.0.65 added
+</span><span class='line'>oracle64-1.6.0.65 added
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行<code>jenv versions</code>时会显示：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv versions
+</span><span class='line'>* system <span class="o">(</span><span class="nb">set </span>by /Users/bxpeng/.jenv/version<span class="o">)</span>
+</span><span class='line'>  1.6
+</span><span class='line'>  1.6.0.65
+</span><span class='line'>  oracle64-1.6.0.65
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同样的，使用<code>jenv add</code>将Java 7加入jenv中：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv add /Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home/
+</span><span class='line'>1.7 added
+</span><span class='line'>1.7.0.71 added
+</span><span class='line'>oracle64-1.7.0.71 added
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv add /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home/
+</span><span class='line'>1.8 added
+</span><span class='line'>1.8.0.25 added
+</span><span class='line'>oracle64-1.8.0.25 added
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>现在运行<code>jenv versions</code>会显示：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv versions
+</span><span class='line'>* system <span class="o">(</span><span class="nb">set </span>by /Users/bxpeng/.jenv/version<span class="o">)</span>
+</span><span class='line'>  1.6
+</span><span class='line'>  1.6.0.65
+</span><span class='line'>  oracle64-1.6.0.65
+</span><span class='line'>  1.7
+</span><span class='line'>  1.7.0.71
+</span><span class='line'>  oracle64-1.7.0.71
+</span><span class='line'>  1.8
+</span><span class='line'>  1.8.0.25
+</span><span class='line'>  oracle64-1.8.0.25
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>对于博主这种不是处女座的人来说，也觉得需要对版本再管理一下，使用<code>jenv remove</code>可以从jEnv中去掉不需要的Java版本：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv remove 1.6
+</span><span class='line'>JDK 1.6 removed
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>整理后，再运行<code>jenv versions</code>会显示：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv versions
+</span><span class='line'>* system <span class="o">(</span><span class="nb">set </span>by /Users/bxpeng/.jenv/version<span class="o">)</span>
+</span><span class='line'>  1.6.0.65
+</span><span class='line'>  1.7.0.71
+</span><span class='line'>  1.8.0.25
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>选择一个Java版本，运行<code>jenv local</code>，例如：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>jenv <span class="nb">local </span>1.8.0.25
+</span><span class='line'><span class="nv">$ </span>java -version
+</span><span class='line'>java version <span class="s2">&quot;1.8.0_25&quot;</span>
+</span><span class='line'>Java<span class="o">(</span>TM<span class="o">)</span> SE Runtime Environment <span class="o">(</span>build 1.8.0_25-b17<span class="o">)</span>
+</span><span class='line'>Java HotSpot<span class="o">(</span>TM<span class="o">)</span> 64-Bit Server VM <span class="o">(</span>build 25.25-b02, mixed mode<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>DangDangDangDang，我们已经成功地指定了某文件夹中local的Java版本。</p>
+
+<p>你可以运行<code>jenv global</code>设置一个默认的Java版本，运行<code>jenv which java</code>显示可执行的Java的完整路径。</p>
+
+<p>你也可以在特定的文件夹下使用.java-version文件来设定Java的版本。当我需要在Project中使用Java 6时，我仅仅需要把<code>1.6.0.65</code>作为内容保存在.java-version文件中，当我进入该文件夹时jEnv会自动地帮助我设定local的Java的版本。</p>
+
+<p>没错，我们现在有了Java的多个版本，并且可以在它们之间轻松切换。更多的使用方法可以在<a href="http://www.jenv.be/">jEnv官网</a>的官网查询到。</p>
+
+<p><strong>参考文献:</strong></p>
+
+<ol>
+<li><a href="http://www.jenv.be/">jEnv官网</a></li>
+<li><a href="http://andrew-jones.com/blog/managing-multiple-versions-of-java-on-os-x/">Managing multiple versions of Java on OS X</a></li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Boxing
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-25T23:16:17+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:16 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>, <a class='category' href='/blog/categories/jenv/'>jenv</a>, <a class='category' href='/blog/categories/tool/'>tool</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/26/config-git-log-better/" title="Next Post: 更好地配置git log">更好地配置git log &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Boxing -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'raindrivendevelopment';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://boxingp.github.io/blog/2015/01/25/manage-multiple-versions-of-java-on-os-x/';
+        var disqus_url = 'http://boxingp.github.io/blog/2015/01/25/manage-multiple-versions-of-java-on-os-x/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="http://arrow.scrolltotop.com/arrow86.js"></script>
+<noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+</body>
+</html>

@@ -1,0 +1,752 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>《敏捷软件开发：原则、模式与实践》读书笔记 - Rain-driven Development</title>
+  <meta name="author" content="Boxing">
+
+  
+  <meta name="description" content="发现自己对于Java的一些设计以及实践了解得不够，导致写出来的代码存在着问题，同时也想要和其他人很好地交流自己的设计思路。今天终于摸出了这本书，好好读一下，同时写代码实践，希望会有提高。 第二本Bob大叔的书。 前言 敏捷开发（Agile Development） 极限编程（eXtreme &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://boxingp.github.io/blog/2015/02/27/the-agile-software-development-reading-notes">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Rain-driven Development" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58940494-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Rain-driven Development</a></h1>
+  
+    <h2>雨驱动开发</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="boxingp.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">《敏捷软件开发：原则、模式与实践》读书笔记</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-27T22:05:42+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:05 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>发现自己对于Java的一些设计以及实践了解得不够，导致写出来的代码存在着问题，同时也想要和其他人很好地交流自己的设计思路。今天终于摸出了这本书，好好读一下，同时写代码实践，希望会有提高。</p>
+
+<!-- more -->
+
+
+<p>第二本Bob大叔的书。</p>
+
+<h2>前言</h2>
+
+<blockquote><p>敏捷开发（Agile Development）</p>
+
+<p>极限编程（eXtreme Programming，简称XP）</p></blockquote>
+
+<h1>第I部分 敏捷开发</h1>
+
+<h2>第1章 敏捷实践</h2>
+
+<p>概括出如何让软件开发团队具有快速工作、响应变化能力的价值观（value）。也就是敏捷联盟宣言。瞄了一眼名单，看到了Martin Fowler，<a href="http://martinfowler.com/">他的网站</a>有不少干货。</p>
+
+<blockquote><ol>
+<li><p>个体和交互胜过过程和工具</p></li>
+<li><p>可以工作的软件胜过面面俱到的文档</p></li>
+<li><p>客户合作胜过合同谈判</p></li>
+<li><p>响应变化胜过遵循计划</p></li>
+</ol>
+</blockquote>
+
+<p>于是引出了12条原则</p>
+
+<blockquote><ol>
+<li>我们最优先要做的是通过尽早的、持续的交付有价值的软件来使客户满意。</li>
+</ol>
+</blockquote>
+
+<p>持续交付。</p>
+
+<blockquote><ol>
+<li>即使到了开发的后期，也欢迎改变需求。敏捷过程利用变化来为客户创造竞争优势。</li>
+</ol>
+</blockquote>
+
+<p>保持软件结构的灵活性。</p>
+
+<blockquote><ol>
+<li>经常性地交付可以工作的软件，交付的间隔可以从几周到几个月，交付的时间间隔越短越好。</li>
+</ol>
+</blockquote>
+
+<p>快速迭代。</p>
+
+<blockquote><ol>
+<li><p>在整个项目开发期间，业务人员和开发人员必须天天都在一起工作。</p></li>
+<li><p>围绕被激励起来的个人来构建项目。给他们提供所需要的环境和支持，并且信任他们能够完成工作。</p></li>
+<li><p>在团队内部，最具有效果并且富有效率的传递信息的方法，就是面对面的交谈。</p></li>
+<li><p>工作的软件是首要的进度度量标准。</p></li>
+</ol>
+</blockquote>
+
+<p>我的理解是要明确好真正的目标是什么。</p>
+
+<blockquote><ol>
+<li>敏捷过程提倡可持续的开发速度。责任人、开发者和用户应该能够保持一个长期的、恒定的开发速度。</li>
+</ol>
+</blockquote>
+
+<p>还是那句话，敏捷项目是马拉松长跑。</p>
+
+<blockquote><ol>
+<li><p>不断地关注优秀的技能和好的设计会增强敏捷能力。</p></li>
+<li><p>简单——使未完成的工作最大化的艺术——是根本的。</p></li>
+</ol>
+</blockquote>
+
+<p>我觉得TDD的好处就是可以避免开发的过程中想太多导致范围超出预期。</p>
+
+<blockquote><ol>
+<li>最好的构架、需求和设计出自于自组织的团队。</li>
+</ol>
+</blockquote>
+
+<p>敏捷团队的成员共同来解决项目中所有方面的问题。</p>
+
+<blockquote><ol>
+<li>每隔一定时间，团队会在如何才能更有效地工作方面进行反省，然后相应地对自己的行为进行调整。</li>
+</ol>
+</blockquote>
+
+<p>隔一段时间进行一下Retro。</p>
+
+<h2>第2章 极限编程概述</h2>
+
+<blockquote><p>极限编程（eXtreme Programming，简称XP）是敏捷方法中最著名的一个。它由一系列简单却互相依赖的实践组成。</p>
+
+<p>1.客户作为团队成员</p>
+
+<p>XP团队中的客户是指定义产品的特性并排列这些特性优先级的人或者团队。</p>
+
+<p>2.用户素材</p>
+
+<p>在XP中，我们和客户反复讨论，以获取对于需求细节的理解，但是不去捕获那些细节。</p>
+
+<p>用户素材（user stories）就是正在进行的关于需求谈话的助记符。</p>
+
+<p>3.短交付周期</p>
+
+<p>3.1迭代计划</p>
+
+<p>它由客户根据开发人员确定的预算而选择的一些用户素材组成。</p>
+
+<p>3.2发布计划</p>
+
+<p>它表示了一次较大的交付，通常此次交付会被加入到产品中。</p>
+
+<p>4.验收测试</p>
+
+<p>5.结对编程</p>
+
+<p>6.测试驱动的开发方法</p>
+
+<p>7.集体所有权</p>
+
+<p>结对编程中的每一对都具有拆出（check out）任何模块并对它进行改进的权利。</p>
+
+<p>8.持续集成</p>
+
+<p>9.可持续的开发速度</p>
+
+<p>10.开放的工作空间</p>
+
+<p>11.计划游戏</p>
+
+<p>计划游戏（planning game）的本质是划分业务人员和开发人员之间的职责。业务人员（也就是客户）决定特性（feature）的重要性，开发人员决定实现一个特性所花费的代价。</p>
+
+<p>在每次发布和每次迭代的开始，开发人员基于在最近一次迭代或者最近一次发布中他们所完成的工作量，为客户提供一个预算。客户选择那些所需的成本合计起来不超过该预算的用户素材。</p>
+
+<p>12.简单的设计</p>
+
+<p>12.1考虑能够工作的最简单的事情</p>
+
+<p>12.2你将不需要它</p>
+
+<p>他们开始时假设将不需要那些基础结构。</p>
+
+<p>12.3一次，并且只有一次</p>
+
+<p>极限编程者不能容忍重复的代码。</p>
+
+<p>13.重构</p>
+
+<p>14.隐喻</p>
+
+<p>它是将整个系统联系在一起的全局视图：它是系统的未来景象，是它使得所有单独模块的位置和外观（shape）变得明显直观。如果模块的外观与整个系统的隐喻不符，那么你就知道该模块是错误的。</p>
+
+<p>隐喻通常可以归纳为一个名字系统。这些名字提供了一个系统组成元素的词汇表，并且有助于定义它们之间关系。</p></blockquote>
+
+<h2>第3章 计划</h2>
+
+<p>这章是对XP中计划游戏的描述。</p>
+
+<blockquote><p>1.初始探索</p>
+
+<p>在项目开始时，开发人员和客户会尽量确定出所有真正重要的用户素材。</p>
+
+<p>素材的编写会一直持续到项目完成。</p>
+
+<p>开发人员共同对这些素材进行估算。估算是相对的，不是绝对的。</p>
+
+<p><strong>探究、分解和速度</strong></p>
+
+<p>对一个用户素材进行分解或者合并的主要原因，是为了使其大小适于被准确地估算。</p>
+
+<p>为了知道用户素材的绝对大小，需要一个称为速度（velocity）的因子。</p>
+
+<p>通常，花费几天时间去原型化一到两个用户素材来了解团队的速度就足够了。这样的一个原型化过程称为探究（spike）。</p>
+
+<p>2.发布计划</p>
+
+<p>客户挑选在该发布中她们想要实现的素材，并大致确定这些素材的实现顺序。客户不能选择与当前开发速度不符的更多的素材。</p>
+
+<p>3.迭代计划</p>
+
+<p>4.任务计划</p>
+
+<p>开发人员把素材分解成开发任务，一个任务就是一个开发人员能够在4～16小时之内实现的一些功能。</p>
+
+<p><strong>迭代的中点</strong></p>
+
+<p>在这个时间点上，本次迭代中所安排的半数素材应该被完成。如果没有完成，那么团队会设法重新分配没有完成的任务和职责，以保证在迭代结束时能够完成所有的素材。</p>
+
+<p>5.迭代</p>
+
+<p>每两周，本次迭代结束，下次迭代开始。在每次迭代结束时，会给客户演示当前可运行的程序。要求客户对项目程序的外观、感觉和性能进行评价。客户会以新的用户素材的方式提供反馈。</p></blockquote>
+
+<h1>第4章 测试</h1>
+
+<blockquote><p>1.测试驱动的开发方法。</p>
+
+<p>程序中的每一项功能都有测试来验证它的操作的正确性。</p>
+
+<p>首先编写测试可以迫使我们使用不同的观察点。</p>
+
+<p>通过首先编写测试，我们就迫使自己把程序设计为可测试的。</p>
+
+<p>首先编写测试的另一个重要效果，是测试可以作为一种无价的文档形式。</p>
+
+<p>有意图的编程（intentional programming）。在实现之前，先在测试中陈述你的意图，使你的意图尽可能地简单、易读。你相信这种简单和清楚会给程序指出一个好的结构。</p>
+
+<p>在编写产品代码之前，先编写测试常常会暴露程序中应该被解耦合的区域。¡¡</p>
+
+<p>为了测试而对模块进行隔离的需要，迫使我们以对整个程序结构都有益的方式对程序进行解耦合。</p>
+
+<p>2.验收测试</p>
+
+<p>作为验证工具来说，单元测试是必要的，但是不够充分。单元测试用来验证系统的小的组成单元应该按照所期望的方式工作，但是它们没有验证系统作为一个整体时工作的正确性。单元测试是用来验证系统中个别机制的白盒测试（white-box tests）。验收测试是用来验证系统满足客户需求的黑盒测试（black-box tests）。</p>
+
+<p>验收测试由不了解系统内部机制的人编写。客户可以直接或者和一些技术人员（可能是QA人员）一起来编写验收测试。验收测试是程序，因此是可以运行的。然而，通常使用专为应用程序的客户创建的脚本语言来编写验收测试。</p>
+
+<p>验收测试是关于一项特性（feature）的最终的文档。</p>
+
+<p>此外，首先编写验收测试的行为对于系统的构架方面具有深远的影响。</p>
+
+<p>3.结论</p>
+
+<p>测试套件运行起来越简单，就会越频繁地运行它们。测试运行得越多，就会越快地发现和那些测试的任何背离。</p>
+
+<p>单元测试和验收测试都是一种文档形式，那样的文档是可以编译和执行的；因此，它是准确和可靠的。此外，编写测试所使用的语言是明确的，并且它们的观看者使这些语言非常易读。</p>
+
+<p>测试最重要的好处就是它对于构架和设计的影响。</p></blockquote>
+
+<h2>第5章 重构</h2>
+
+<blockquote><p>在Martin Fowler的名著《重构》一书中，他把重构（Refactoring）定义为：“……在不改变代码外在行为的前提下对代码做出修改，以改进代码的内部结构的过程。”</p>
+
+<p>每一个软件模块都具有三项职责。第一个职责是它运行起来所完成的功能。……第二个职责是它要应对变化。……第三个职责是要和阅读它的人进行沟通。</p>
+
+<p>重构的目的，正像在本章中描述的，是为了每天清洁你的代码。</p></blockquote>
+
+<h2>第6章 一次编程实践</h2>
+
+<blockquote><p>图示有时是不需要的。何时不需要呢？在创建了它们而没有验证它们的代码就打算去遵循它们时，图示就是无意的。画一幅图来探究一个想法是没有错的。然而，画一幅图后，不应该假定该图就是相关任务的最好设计。你会发现最好的设计是在你首先编写测试，一小步一小步前进时逐渐形成的。</p></blockquote>
+
+<p>形象地展现了结对编程、TDD以及重构的过程。</p>
+
+<p>多一句嘴，之前一直在诺基亚手机上玩bowling的游戏，看完这章知道它的记分规则了。</p>
+
+<h1>第II部分 敏捷设计</h1>
+
+<blockquote><p>在每次迭代中，团队改进系统设计，使设计尽可能适合于当前系统。团队不会花费许多时间去预测未来的需求和需要，也不会试图在今天就构建一些基础结构去支撑那些他们认为明天才会需要的特性。他们更愿意关注当前的系统结构，并使它尽可能地好。</p>
+
+<p><strong>拙劣设计的症状</strong></p>
+
+<ul>
+<li><p>僵化性（Rigidity）</p></li>
+<li><p>脆弱性（Fragility）</p></li>
+<li><p>牢固性（Immobility）</p></li>
+<li><p>粘滞性（Viscosity）</p></li>
+<li><p>不必要的复杂性（Needless Complexity）</p></li>
+<li><p>不必要的重复（Needless Repetition）</p></li>
+<li><p>晦涩性（Opacity）</p></li>
+</ul>
+
+
+<p><strong>原则</strong></p>
+
+<ul>
+<li><p>单一职责原则（The Single Responsibility Principle，简称SRP）</p></li>
+<li><p>开放-封闭原则（The Open-Close Principle，简称OCP）</p></li>
+<li><p>Liskov替换原则（The Liskov Substitution Principle，简称LSP）</p></li>
+<li><p>依赖倒置原则（The Dependency Inversion Principle，简称DIP）</p></li>
+<li><p>接口隔离原则（The Interface Segregation Principle，简称ISP）</p></li>
+</ul>
+</blockquote>
+
+<p>这就是面向对象设计中所说的<a href="http://en.wikipedia.org/wiki/SOLID_%28object-oriented_design%29">SOLID</a>。</p>
+
+<h2>第7章 什么是敏捷设计</h2>
+
+<blockquote><p>软件项目的设计是一个抽象的概念。它和程序的概括形状（shape）、结构以及每一个模块、类和方法的详细形状和结构有关。可以使用许多不同的媒介（media）去描绘它，但是它最终体现为源代码。最后，源代码就是设计。</p>
+
+<p>当软件出现下面任何一种气味时，就表明软件正在腐化。</p>
+
+<p>1.僵化性（Rigidity）</p>
+
+<p>僵化性是指难以对软件进行改动，即使是简单的改动。如果单一的改动会导致有依赖关系的模块中的连锁改动，那么设计就是僵化的。必须要改动的模块越多，设计就越僵化。</p>
+
+<p>2.脆弱性（Fragility）</p>
+
+<p>脆弱性是指，在进行一个改动时，程序的许多地方就可能出现问题。</p>
+
+<p>3.牢固性（Immobility）</p>
+
+<p>牢固性是指，设计中包含了对其他系统有用的部分，但是要把这些部分从系统中分离出来所需要的努力和风险是巨大的。</p>
+
+<p>4.粘滞性（Viscosity）</p>
+
+<p>粘滞性有两种表现形式：软件的粘滞性和环境的粘滞性。</p>
+
+<p>当面临一个改动时，开发人员常常发现会有多种改动的方法。其中，一些方法会保持设计：而另外一些会破坏设计（也就是生硬的手法）。当那些可以保持系统设计的方法比那些生硬手法更难应用时，就表明设计具有高的粘滞性。做错误的事情是容易的，但是做正确的事情却很难。</p>
+
+<p>当开发环境迟钝、低效时，就会产生环境的粘滞性。</p>
+
+<p>5.不必要的复杂性（Needless Complexity）</p>
+
+<p>如果设计中包含有当前没有用的组成部分，它就含有不必要的复杂性。</p>
+
+<p>6.不必要的重复（Needless Repetition）</p>
+
+<p>当同样的代码以稍微不同的形式一再出现时，就表示开发人员忽视了抽象。</p>
+
+<p>7.晦涩性（Opacity）</p>
+
+<p>晦涩性是指模块难以理解。</p>
+
+<p>在非敏捷环境中，由于需求没有按照初始设计预见的方式进行变化，从而导致了设计的退化。</p>
+
+<p>设计必须要保持干净、简单，并且由于源代码是设计最重要的表示，所以它同样要保持干净。</p>
+
+<p>敏捷设计是一个过程，不是一个事件。它是一个持续的应用原则、模式以及实践来改进软件的结构和可读性的过程。它致力于保持系统设计在任何时间都尽可能的简单、干净以及富有表现力。</p></blockquote>
+
+<h2>第8章 单一职责原则（SRP）</h2>
+
+<blockquote><p>就一个类而言，应该仅有一个引起它变化的原因。</p>
+
+<p>如果一个类承担的职责过多，就等于把这些职责耦合在了一起。一个职责的变化可能会削弱或者抑制这个类完成其他职责的能力。</p>
+
+<p>在SRP中，我们把职责定义为“变化的原因”（a reason for  change）。如果你能够想到多于一个的动机去改变一个类，那么这个类就具有多于一个的职责。</p>
+
+<p>SRP是所有原则中最简单的之一，也是最难正确运用的之一。我们会自然地把职责结合在一起。软件设计真正要做的许多内容，就是发现职责并把那些职责相互分离。</p></blockquote>
+
+<h2>第9章 开放——封闭原则（OCP）</h2>
+
+<blockquote><p>开放——封闭原则（The Open-Closed Principle，简称OCP）。</p>
+
+<p>软件实体（类、模块、函数等等）应该是可以扩展的，但是不可修改的。</p>
+
+<p>遵循开发——封闭原则设计出的模块具有两个主要的特征。它们是：</p>
+
+<ol>
+<li><p>“对于扩展是开放的”（Open for extension）。这意味着模块的行为是可以扩展的。当应用的需求改变时，我们可以对模块进行扩展，使其具有满足那些改变的新行为。换句话说，我们可以改变模块的功能。</p></li>
+<li><p>“对于更改是封闭的”（Closed for modification）。对模块行为进行扩展时，不必改动模块的源代码或者二进制代码。模块的二进制可执行版本，无论是可链接的库、DLL或者Java的.jar文件，都无需改动。</p></li>
+</ol>
+
+
+<p>在C++、Java或者其他任何的OOPL中，可以创建出固定却能够描述一组任意个可能行为的抽象体。这个抽象体就是抽象基类。而这一组任意个可能的行为则表现为可能的派生类。</p>
+
+<p>模块可以操作一个抽象体。由于模块依赖于一个固定的抽象体，所以它对于更改可以是关闭的。同时，通过从这个抽象体派生，也可以扩展此模块的行为。</p>
+
+<p>STRATEGY模式</p>
+
+<p>Template模式</p>
+
+<p>一般而言，无论模块是多么的“封闭”，都会存在一些无法对之封闭的变化。没有对于所有的情况都贴切的模型。</p>
+
+<p>既然不可能完全封闭，那么就必须有策略地对待这个问题。也就是说，设计人员必须对于他设计的模块应该对哪种变化封闭做出选择。他必须先猜测出最有可能发生的变化种类，然后构造抽象来隔离那些变化。</p>
+
+<p>如果我们决定接受第一颗子弹，那么子弹到来的越早、越快就对我们越有利。</p>
+
+<p>开发人员应该仅仅对程序中呈现出频繁变化的那些部分做出抽象。拒绝不成熟的抽象和抽象本身一样重要。</p></blockquote>
+
+<h2>第10章 Liskov替换原则（LSP）</h2>
+
+<blockquote><p>子类型（subtype）必须能够替换掉它们的基类型（base type）。</p>
+
+<p>对于LSP的违反常常会导致以明显违反OCP的方式使用运行时类型辨别（RTTI）。这种方式常常是使用一个显式的if语句或者if/else链去确定一个对象的类型，以便于可以选择针对该类型的正确行为。</p>
+
+<p>继承是IS-A（“是一个”）关系。也就是说，如果一个新类型的对象被认为和一个已有类的对象之间满足IS-A关系，那么这个新对象的类应该从这个已用对象的类派生。</p>
+
+<p>LSP清楚地指出，OOD中IS-A关系是就行为方式而言的，行为方式是可以进行合理假设的，是客户程序所依赖的。</p>
+
+<p>基于契约设计（Design By Contract，简称DBC）。使用DBC，类的编写者显式地规定针对该类的契约。客户代码的编写者可以通过该契约获悉可以依赖的行为方式。契约是通过为每个方法声明的前置条件（preconditions）和后置条件（postcondition）来指定的。要使一个方法得以执行，前置条件必须要为真。执行完毕后，该方法要保证后置条件为真。</p>
+
+<p>在重新声明派生类中的例程（routine）时，只能使用相等或者更弱的前置条件来替换原始的前置条件，只能使用相等或者更强的后置条件来替换原始的后置条件。</p>
+
+<p>也可以通过编写单元测试的方式来指定契约。单元测试通过彻底的测试一个类的行为来使该类的行为更加清晰。</p>
+
+<p>不应该轻易放弃对于LSP的遵循。总是保证子类可以替代它的基类是一个有效的管理复杂性的方法。</p>
+
+<p>可以把两个类的公共部分提取出来作为一个抽象基类。</p>
+
+<p>有一些简单的启发规则可以提供一些有关违反LSP的提示。</p>
+
+<ol>
+<li><p>派生类中的退化函数</p></li>
+<li><p>从派生类中抛出异常。如果基类的使用者不期望这些异常，那么把它们添加到派生类的方法中就会导致不可替换性。</p></li>
+</ol>
+</blockquote>
+
+<h2>第11章 依赖倒置原则（DIP)</h2>
+
+<blockquote><p>依赖倒置原则（DIP）</p>
+
+<ol type="a">
+<li><p>高层模块不应该依赖于低层模块。二者都应该依赖于抽象。</p></li>
+<li><p>抽象不应该依赖于细节。细节应该依赖于抽象。</p></li>
+</ol>
+
+
+<p>一个设计良好的面向对象的程序，其依赖程序结构相对于传统的过程式方法设计的通常结构而言就是被“倒置”了。</p>
+
+<p>无论如何高层模块都不应该依赖于低层模块。</p>
+
+<p>如果高层模块独立于低层模块，那么高层模块就可以非常容易地被重用。该原则是框架（framework）设计的核心原则。</p>
+
+<p>每个较高层次都为它所需要的服务声明一个抽象接口，较低的层次实现了这些抽象接口，每个高层类都通过该抽象接口使用下一层，这样高层就不依赖于低层。低层反而依赖于在高层中声明的抽象服务接口。</p>
+
+<p>一个稍微简单但仍然非常有效的对于DIP的解释，是这样一个简单地启发式规则：“依赖于抽象。”</p>
+
+<p>根据这个启发式规则，可知：</p>
+
+<ul>
+<li><p>任何变量都不应该持有一个指向具体类的指针或者引用</p></li>
+<li><p>任何类都不应该从具体类派生</p></li>
+<li><p>任何方法都不应该覆写它的任何基类中的已经实现了的方法</p></li>
+</ul>
+
+
+<p>我们在应用程序中所编写的大多数具体类都是不稳定的。我们不想直接依赖于这些不稳定的具体类。通过把它们隐藏在抽象接口的后面，可以隔离它们的不稳定性。</p>
+
+<p>另一方面，如果看得更远一点，认为是由客户类来声明它们需要的服务接口，那么仅当客户需要时才会对接口进行改变。这样，改变实现抽象接口的类就不会影响到客户。</p>
+
+<p>动态多态性</p>
+
+<p>静态多态性</p>
+
+<p>使用传统的过程化程序设计所创建出来的依赖关系结构，策略是依赖于细节的。这是糟糕的，因为这样会使策略受到细节改变的影响。面向对象的程序设计倒置了依赖关系结构，使得细节和策略都依赖于抽象，并且常常是客户拥有服务接口。</p></blockquote>
+
+<h2>第12章 接口隔离原则（ISP）</h2>
+
+<blockquote><p>如果类的接口不是内聚的（cohesive），就表示该类具有“胖”的接口。换句话说，类的“胖”接口可以分解成多组方法。每一组方法都服务于一组不同的客户程序。这样，一些客户程序可以使用一组成员函数，而其他客户程序可以使用其他组的成员函数。</p>
+
+<p>不应该强迫客户依赖于它们不用的方法。</p>
+
+<p>一个对象的客户不是必须通过该对象的接口去访问它，也可以通过委托或者通过该对象的基类去访问它。</p>
+
+<p>胖类（fat class）会导致它们的客户程序之间产生不正常的并且有害的耦合关系。当一个客户程序要求该胖类进行一个改动时，会影响到所有其他的客户程序。因此，客户程序应该仅仅依赖于它们实际调用的方法。通过把胖类的接口分解为多个特定于客户程序的接口，可以实现这个目标。</p></blockquote>
+
+<h1>第III部分 薪水支付案例研究</h1>
+
+<h2>第13章 COMMAND模式和ACTIVE OBJECT模式</h2>
+
+<p>命令模式。</p>
+
+<blockquote><p>大多数类都是一组方法和相应的一组变量的组合。COMMAND模式不是这样的。它只是封装了一个没有任何变量的函数。</p>
+
+<p>可以创建一个简单的文本文件来描述Sensor和Command之间的绑定关系。初始化程序可以读取该文件，并构建出对应的系统。这样，系统中的连接关系可以完全在程序以外确定，并且对它的调整也不会引起重新编译。</p>
+
+<p>通过对命令（command）概念的封装，该模式解除了系统的逻辑互联关系和实际连接的设备之间的耦合。这是一个巨大的好处。</p>
+
+<p>另外一个COMMAND模式的常见用法是创建和执行事务操作（Transactions）。</p>
+
+<p>这给我们带来的好处在于很好地解除了从用户获取数据的代码、验证并操作数据的代码以及业务对象本身之间的耦合关系。</p>
+
+<p>我们也以一种不同的方式解耦了验证和执行代码。一旦获取了数据，就没有理由要求验证和执行方法立即被调用。可以把事务操作对象放在一个列表中，以后再进行验证和执行。</p>
+
+<p>给COMMAND模式增加了undo()方法。显而易见，如果Command派生类的do()方法可以记住它所执行的操作的细节，那么undo方法就可以取消这些操作，并把系统恢复到原先的状态。</p></blockquote>
+
+<p>活动对象模式。</p>
+
+<blockquote><p>ACTIVE OBJECT模式是实现多线程控制的一项古老的技术。……遍历链表，执行并去除每个命令。……如果链表中的一个Command对象会克隆自己并把克隆对象放到链表的尾部……这个链表永远不会为空，函数永远不会返回。……如果所等待的事件没有发生，它只是把自己放回。</p>
+
+<p>采用该技术的变体（variations）去构建多线程系统已经是并且将会一直是一个很常见的实践。这种类型的线程被称为run-to-completion任务（RTC），因为每个Command实例在下一个Command可以运行之前就运行完成了。RTC的名字意味着Command实例不会阻塞。</p></blockquote>
+
+<h2>第14章 TEMPLATE METHOD模式和STRATEGY模式：继承与委托</h2>
+
+<p>模版方法模式。</p>
+
+<blockquote><p>继承非常容易被过度使用，而且过度使用的代价是非常高的。所以我们减少了对继承的使用，常常使用组合或者委托来代替它。</p>
+
+<p>TEMPLATE METHOD模式使用继承来解决问题，而STRATEGY模式使用的则是委托。</p>
+
+<p>编写过的所有程序，其中许多可能都具有如下的基本主循环结构：首先进行初始化；接着进入主循环；在主循环中完成需要做的工作；最后，一旦完成了工作，程序就退出主循环，并且在程序终止前做些清除工作。</p>
+
+<p>TEMPLATE METHOD模式把所有通用代码放入一个抽象基类（abstract base class）的实现方法中。这个实现方法完成了这个通用算法，但是将所有的实现细节都交付给该基类的抽象方法。</p></blockquote>
+
+<p>通过继承基类，只需要实现基类中的抽象方法即可。</p>
+
+<blockquote><p>设计模式是很好的东西。它们可以帮助解决很多设计问题。但是它们的存在并不意味着必须要经常使用它们。</p>
+
+<p>TEMPLATE METHOD模式展示了面向对象编程中诸多经典重用形式中的一种。其中通用算法被放置在基类中，并且通过继承在不同的具体上下文中实现该通用算法。但是这项技术是有代价的。继承是一种非常强的关系。派生类不可避免地要和它们的基类绑定在一起。</p></blockquote>
+
+<p>策略模式。</p>
+
+<blockquote><p>STRATEGY模式使用了一种非常不同的方法来倒置通用算法和具体实现之间的依赖关系。</p>
+
+<p>不是将通用的应用算法放进一个抽象基类中，而是将它放进一个具体类中。把通用算法必须要调用的抽象方法定义在一个借口中。从这个接口中派生出类，并把它传给放有通用算法的具体类。之后，该类就可以把具体工作委托给这个接口去完成。</p>
+
+<p>STRATEGY模式比TEMPLATE METHOD模式多提供了一个额外的好处。尽管TEMPLATE METHOD模式允许一个通用算法操纵多个可能的具体实现，但是由于STRATEGY模式完全遵循DIP原则，从而允许每个具体实现都可以被多个不同的通用算法操纵。不过要以一些额外的复杂性、内存以及运行时间开销作为代价。</p></blockquote>
+
+<h2>第15章 FACADE模式和MEDIATOR模式</h2>
+
+<p>外观模式。</p>
+
+<blockquote><p>这两个模式都把某种策略（policy）施加到另外一组对象上。FACADE模式从上面施加策略，而MEDIATOR模式则是从下面施加策略。FACADE模式的使用是明显且受限的，而MEDIATOR模式的使用则是不明显且不受限制的。</p>
+
+<p>当想要为一组具有复杂且全面的接口的对象提供一个简单且特定的接口时，可以使用FACADE模式。它对用户隐藏了所有的复杂性。</p></blockquote>
+
+<p>中介者模式。</p>
+
+<blockquote><p>MEDIATOR模式把它的策略施加在那些对象上，而无需它们的允许或者知晓。</p>
+
+<p>如果策略涉及范围广泛并且可见，那么可以使用FACADE模式从上面施加该策略。另一方面，如果策略隐蔽并且有针对性，那么MEDIATOR模式是更好的选择。Facades通常是约定的关注点。每个人都同意去使用该facade而不是隐藏于其下的对象。另一方面，Mediator则对用户是隐藏的。它的策略是既成事实的而不是一项约定事务。</p></blockquote>
+
+<h2>第16章 SINGLETON模式和MONOSTATE模式</h2>
+
+<p>单例模式。</p>
+
+<blockquote><p>然而有一些类，它们应该只有一个实例。</p></blockquote>
+
+<p>实现SINGLETON模式的思路是：一个类能返回对象一个引用(永远是同一个)和一个获得该实例的方法（必须是静态方法）；当我们调用这个方法时，如果类持有的引用不为空就返回这个引用，如果类保持的引用为空就创建该类的实例并将实例的引用赋予该类保持的引用；同时我们还将该类的构造函数定义为私有方法，这样其他处的代码就无法通过调用该类的构造函数来实例化该类的对象，只有通过该类提供的静态方法来得到该类的唯一实例。</p>
+
+<blockquote><p>SINGLETON模式的好处：跨平台；适用于任何类；可以透过派生创建；延迟求值（Lazy evaluation）。</p>
+
+<p>MONOSTATE模式是另外一种获取对象单一性的方法。</p></blockquote>
+
+<p>使多个实例表现得像一个对象，只需要它们共享相同的变量。只要把所有的变量都变成静态变量即可。</p>
+
+<blockquote><p>这两个模式之间的区别，在于一个关注行为，而另一个关注结构。SINGLETON模式强制结构上的单一性。它防止创建出多个对象实例。相反，MONOSTATE模式则强制行为上的单一性，而没有强加结构方面的限制。</p>
+
+<p>MONOSTATE模式的好处：透明性；可派生性；多态性。</p></blockquote>
+
+<h2>第17章 NULL OBJECT模式</h2>
+
+<p>空对象模式。</p>
+
+<blockquote><p>通常，该模式会消除对null进行检查的需要，并且有助于简化代码。</p>
+
+<p>使用该模式，我们可以确保函数总是返回有效的对象，即使在它们失败时也是如此。这些代表失败的对象“什么也不做”。</p></blockquote>
+
+<p>（先挖坑，马上填）</p>
+
+<p><img class="left" src="/images/2015/agile-software-development.jpg" width="98" height="137"></p>
+
+<p><a href="http://book.douban.com/subject/1140457/">敏捷软件开发：原则、模式与实践</a> - <a href="http://en.wikipedia.org/wiki/Robert_Cecil_Martin">Robert C. Martin</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Boxing
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-27T22:05:42+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:05 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/book/'>book</a>, <a class='category' href='/blog/categories/note/'>note</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/26/use-git-daemon-to-share-git-repository/" title="Previous Post: 使用git daemon来分享Git Repository">&laquo; 使用git daemon来分享Git Repository</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/28/java-sorting-algorithms/" title="Next Post: 一些排序算法的Java实现">一些排序算法的Java实现 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Boxing -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'raindrivendevelopment';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://boxingp.github.io/blog/2015/02/27/the-agile-software-development-reading-notes/';
+        var disqus_url = 'http://boxingp.github.io/blog/2015/02/27/the-agile-software-development-reading-notes/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="http://arrow.scrolltotop.com/arrow86.js"></script>
+<noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
+</body>
+</html>

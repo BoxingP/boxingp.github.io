@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Git | Rain-driven Development]]></title>
+  <link href="http://boxingp.github.io/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://boxingp.github.io/"/>
+  <updated>2015-10-23T03:30:41+08:00</updated>
+  <id>http://boxingp.github.io/</id>
+  <author>
+    <name><![CDATA[Boxing]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用git daemon来分享Git Repository]]></title>
+    <link href="http://boxingp.github.io/blog/2015/02/26/use-git-daemon-to-share-git-repository/"/>
+    <updated>2015-02-26T20:04:37+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/02/26/use-git-daemon-to-share-git-repository</id>
+    <content type="html"><![CDATA[<p>今天遇到一个问题，怎么在两台电脑之前分享Git Repo。之前的做法是使用AirDrop传输，或者用Skype发送。今天了解到一种新的方法，git提供了<code>git daemon</code>，可以很方便地分享本地Git Repo的读写权限。</p>
+
+<!-- more -->
+
+
+<p><code>git daemon</code>启动了一个TCP服务，通过<code>git://</code>协议分享Git Repo，默认的端口号是<code>9418</code>，它会监听该端口，提供服务。但是需要注意的是，这种方式是不安全的，通常只在安全的值得信赖的网络中使用。如果想要安全的解决方案，应该使用<a href="http://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols#The-SSH-Protocol">SSH协议</a>。</p>
+
+<p>步骤是：</p>
+
+<p>1.进入想要分享的Project目录：</p>
+
+<pre><code class="sh">$ cd Project
+</code></pre>
+
+<p>2.clone裸仓库：</p>
+
+<pre><code class="sh">$ git clone --bare Project Project.git
+</code></pre>
+
+<p>完成后，git会在当前目录下创建一个名为Project.git的目录。</p>
+
+<p>3.在Project.git目录下创建一个名为git-daemon-export-ok的文件：</p>
+
+<pre><code class="sh">$ touch cart.git/git-daemon-export-ok
+</code></pre>
+
+<p>这是为了让daemon知道只分享该Git Repo，也可以在运行<code>git daemon</code>时加上<code>--export-all</code>，这样所有的Git Repo都会被分享。</p>
+
+<p>4.将Project.git目录移动到你想要分享的目录中：</p>
+
+<pre><code class="sh">$ mv Project.git /Shared
+</code></pre>
+
+<p>5.运行<code>git daemon</code>命令：</p>
+
+<pre><code class="sh">$ git daemon --base-path=/Shared
+</code></pre>
+
+<p>这样就可以clone本地的Git Repo了：</p>
+
+<pre><code class="sh">$ git clone git://{Local Machine IP Address}/Project.git
+</code></pre>
+
+<p><code>-–base-path=</code>，所有的请求都是该path的相对链接，运行上面的<code>git clone</code>命令时，daemon会理解path为<code>/Shared/Project.git</code>。</p>
+
+<p>通过上述步骤，只能通过<code>git://</code>协议获得clone的权限，如果需要获得push的权限，可以在运行<code>git daemon</code>命令时加上<code>--enable=receive-pack</code>，或者进入<code>Shared/Project.git</code>目录，输入：</p>
+
+<pre><code class="sh">$ cd Shared/Project.git
+$ git config daemon.receivepack true
+</code></pre>
+
+<p>git会在当前目录下的config文件中添加以下配置：</p>
+
+<pre><code class="sh">[daemon]
+    receivepack = true
+</code></pre>
+
+<p>这时就可以允许其他用户拥有push的权限。默认上该权限是关闭的，因为使用的协议并未进行验证，也就是说任何人可以push任何东西到Git Repo中，包括清除它。这意味着只能在一个封闭的局域网中设置它。</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://git-scm.com/book/en/v2/Git-on-the-Server-Git-Daemon">Git on the Server - Git Daemon</a></p></li>
+<li><p><a href="http://git-scm.com/docs/git-daemon">Git - git-daemon Documentation</a></p></li>
+<li><p><a href="http://www.royee.net/archives/254">Git daemon服务器架设指南</a></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[更好地配置git Log]]></title>
+    <link href="http://boxingp.github.io/blog/2015/01/26/config-git-log-better/"/>
+    <updated>2015-01-26T18:45:06+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/01/26/config-git-log-better</id>
+    <content type="html"><![CDATA[<p><a href="http://git-scm.com/">Git</a>是一个分布式的版本控制软件，由Linux内核开发者<a href="http://en.wikipedia.org/wiki/Linus_Torvalds">Linus Torvalds</a>开发设计。这里多一句嘴，Linux和Git任意完成一个就可以留名青史，Linus一人包场了。<del>妈妈问我为什么跪着写完这篇博客。</del></p>
+
+<p>自己14年才开始使用Git，之前就是在本地很low地创建不同的文件夹来保存代码。使用Git后，<del>“Diff，Add我闭着眼，reset回退你沉醉了没”</del>可以很自由的对代码进行版本管理，而不用担心自己会丢失历史版本。</p>
+
+<p>Git中使用<code>git log</code>查看之前提交的commit日志。</p>
+
+<!-- more -->
+
+
+<p>一般来说，在repo中输入<code>git log</code>后：</p>
+
+<pre><code class="sh">$ git log
+</code></pre>
+
+<p>默认是这样的，会新打开一个page显示如下的信息：</p>
+
+<pre><code class="sh">commit ef22c6836e1201035c94c73c8f6c258bdb461146
+Author: BoxingP &lt;boxingp@gmail.com&gt;
+Date:   Mon Jan 26 18:28:40 2015 +0800
+
+    BLOG-6: add disqus comment in blog. Boxing
+
+commit 32a27ef992743dff90db6ee925e6a680b1c3f995
+Author: BoxingP &lt;boxingp@gmail.com&gt;
+Date:   Mon Jan 26 17:32:44 2015 +0800
+
+    BLOG-5: add google analytics in blog. Boxing
+
+commit c089cec96eba70079152889a1f6a87be8893af48
+Author: BoxingP &lt;boxingp@gmail.com&gt;
+Date:   Mon Jan 26 17:04:54 2015 +0800
+
+    BLOG-4: use solarized dark style. Boxing
+
+commit 8011bdb7e814a8b43309116d0810d1e0ca8097c1
+Author: BoxingP &lt;boxingp@gmail.com&gt;
+Date:   Mon Jan 26 02:15:33 2015 +0800
+
+    BLOG-3: update .gitignore. Boxing
+
+:
+</code></pre>
+
+<p><code>git log</code>会按提交时间列出所有的commits，最近的commit排在最上面。每次的commit都有一个SHA-1校验和、作者的名字和电子邮件地址、提交时间，最后缩进一个段落显示commit说明。信息很详细，但是在使用时显得很多，容易分散注意力。<code>git log</code>有很多选项可以帮助我们更好地工作，进行一定的配置后更加方便我们<del>啪啪啪</del>写代码。</p>
+
+<p>经常使用的是<code>format</code>，可以定制要显示的记录格式，这样的输出便于后期编程提取分析，例如：
+<code>sh
+$ git log --pretty=format:"%h -%d %s (%cr) &lt;%an&gt;"
+</code></p>
+
+<pre><code>ef22c68 - (HEAD, origin/source, source) BLOG-6: add disqus comment in blog. Boxing (3 hours ago) &lt;BoxingP&gt;
+32a27ef - BLOG-5: add google analytics in blog. Boxing (4 hours ago) &lt;BoxingP&gt;
+c089cec - BLOG-4: use solarized dark style. Boxing (4 hours ago) &lt;BoxingP&gt;
+8011bdb - BLOG-3: update .gitignore. Boxing (19 hours ago) &lt;BoxingP&gt;
+:
+</code></pre>
+
+<p>下面列出了常用的格式占位符写法及其代表的意义：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;"> <strong>选项</strong> </th>
+<th style="text-align:left;"> <strong>：说明</strong> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;"> <code>%H</code> </td>
+<td style="text-align:left;"> ：提交对象（commit）的完整哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%h</code> </td>
+<td style="text-align:left;"> ：提交对象（commit）的简短哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%T</code> </td>
+<td style="text-align:left;"> ：树对象（tree）的完整哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%t</code> </td>
+<td style="text-align:left;"> ：树对象（tree）的简短哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%P</code> </td>
+<td style="text-align:left;"> ：父对象（parent）的完整哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%p</code> </td>
+<td style="text-align:left;"> ：父对象（parent）的简短哈希字串 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%an</code> </td>
+<td style="text-align:left;"> ：作者（author）的名字 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%ae</code> </td>
+<td style="text-align:left;"> ：作者的电子邮件地址 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%ad</code> </td>
+<td style="text-align:left;"> ：作者修订日期 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%ar</code> </td>
+<td style="text-align:left;"> ：作者修订日期，按多久以前的方式显示 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%cn</code> </td>
+<td style="text-align:left;"> ：提交者（committer）的名字 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%ce</code> </td>
+<td style="text-align:left;"> ：提交者的电子邮件地址 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%cd</code> </td>
+<td style="text-align:left;"> ：提交日期 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%cr</code> </td>
+<td style="text-align:left;"> ：提交日期，按多久以前的方式显示 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%d</code> </td>
+<td style="text-align:left;"> ：对应的branch分支名 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>%s</code> </td>
+<td style="text-align:left;"> ：提交说明 </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>使用<code>format</code>时结合<code>--graph</code>选项，可以看到开头多出一些ASCII字符串表示的简单图形，形象地展示了每次提交所在的分支及其分化衍合情况：</p>
+
+<pre><code class="sh">$ git log --graph --pretty=format:"%h -%d %s (%cr) &lt;%an&gt;"
+</code></pre>
+
+<pre><code class="sh">* ef22c68 - (HEAD, origin/source, source) BLOG-6: add disqus comment in blog. Boxing (4 hours ago) &lt;BoxingP&gt;
+* 32a27ef - BLOG-5: add google analytics in blog. Boxing (5 hours ago) &lt;BoxingP&gt;
+* c089cec - BLOG-4: use solarized dark style. Boxing (5 hours ago) &lt;BoxingP&gt;
+* 8011bdb - BLOG-3: update .gitignore. Boxing (20 hours ago) &lt;BoxingP&gt;
+:
+</code></pre>
+
+<p>下面列出了一些常用的选项及其释义：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;"> <strong>选项</strong> </th>
+<th style="text-align:left;"> <strong>：说明</strong> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;"> <code>-p</code> </td>
+<td style="text-align:left;"> ：按补丁格式显示每个更新之间的差异 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--word-diff</code> </td>
+<td style="text-align:left;"> ：按word diff格式显示差异 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--stat</code> </td>
+<td style="text-align:left;"> ：显示每次更新的文件修改统计信息 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--shortstat</code> </td>
+<td style="text-align:left;"> ：只显示&ndash;stat中最后的行数修改添加移除统计 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--name-only</code> </td>
+<td style="text-align:left;"> ：仅在提交信息后显示已修改的文件清单 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--name-status</code> </td>
+<td style="text-align:left;"> ：显示新增、修改、删除的文件清单 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--abbrev-commit</code> </td>
+<td style="text-align:left;"> ：仅显示SHA-1的前几个字符，而非所有的40个字符 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--relative-date</code> </td>
+<td style="text-align:left;"> ：使用较短的相对时间显示（比如，“2 weeks ago”） </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--graph</code> </td>
+<td style="text-align:left;"> ：显示ASCII图形表示的分支合并历史 </td>
+</tr>
+<tr>
+<td style="text-align:left;"> <code>--pretty</code> </td>
+<td style="text-align:left;"> ：使用其他格式显示历史提交信息，可用的选项包括oneline，short，full，fuller和format（后跟指定格式） </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>更多的资料可以在<a href="http://git-scm.com/docs/git-log">git-log</a>中查看。</p>
+
+<p>如果每次在查看commit日志时都需要加上这些选项，会很麻烦。我们可以设置一个简单的alias。一般来说，上面的命令命名为<code>git lg</code>，当然叫什么取决个人喜好。在设置好后，输入<code>git lg</code>就会看到和之前一致的输出了。</p>
+
+<pre><code class="sh">$ git config --global alias.lg "log --graph --pretty=format:'%h -%d %s (%cr) &lt;%an&gt;'"
+$ git lg
+</code></pre>
+
+<pre><code>* ef22c68 - (HEAD, origin/source, source) BLOG-6: add disqus comment in blog. Boxing (4 hours ago) &lt;BoxingP&gt;
+* 32a27ef - BLOG-5: add google analytics in blog. Boxing (5 hours ago) &lt;BoxingP&gt;
+* c089cec - BLOG-4: use solarized dark style. Boxing (5 hours ago) &lt;BoxingP&gt;
+* 8011bdb - BLOG-3: update .gitignore. Boxing (20 hours ago) &lt;BoxingP&gt;
+:
+</code></pre>
+
+<p>我们可以看到每次的输出会在一个新的page显示，需要输入<code>q</code>才能退出。我们可以在设置alias时增加一条<code>--no-pager</code>的选项，让输出和输入的命令在同一page下显示。此时，可能commit的日志很多，可以增加一条<code>-6</code>的选项将显示的日志数量限制在6。
+<code>sh
+$ git config --global alias.lg "!git --no-pager log -6 --graph --pretty=format:'%h -%d %s (%cr) &lt;%an&gt;'"
+$ git lg
+* ef22c68 - (HEAD, origin/source, source) BLOG-6: add disqus comment in blog. Boxing (4 hours ago) &lt;BoxingP&gt;
+* 32a27ef - BLOG-5: add google analytics in blog. Boxing (5 hours ago) &lt;BoxingP&gt;
+* c089cec - BLOG-4: use solarized dark style. Boxing (6 hours ago) &lt;BoxingP&gt;
+* 8011bdb - BLOG-3: update .gitignore. Boxing (20 hours ago) &lt;BoxingP&gt;
+* b113f3f - BLOG-2: create a new blog about managing java versions with jenv. Boxing (21 hours ago) &lt;BoxingP&gt;
+* 85d8807 - BLOG-1: init blog by using octopress. Boxing (2 days ago) &lt;BoxingP&gt;%
+$
+</code>
+此外，你可以对输出结果的颜色进行设置，使输出结果更直观。毕竟工具就是为了让人可以将注意力更多关注到有产出的工作上，而不被其他东西分散。</p>
+
+<p><strong>参考文献</strong></p>
+
+<ol>
+<li><p><a href="http://git-scm.com/">Git官网</a></p></li>
+<li><p><a href="http://luolei.org/better-git-log/">更好的git log</a></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>
