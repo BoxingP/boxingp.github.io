@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Github | Rain-driven Development]]></title>
   <link href="http://boxingp.github.io/blog/categories/github/atom.xml" rel="self"/>
   <link href="http://boxingp.github.io/"/>
-  <updated>2015-10-24T22:15:42+08:00</updated>
+  <updated>2015-10-24T22:41:19+08:00</updated>
   <id>http://boxingp.github.io/</id>
   <author>
     <name><![CDATA[Boxing]]></name>
@@ -259,7 +259,7 @@ $ rake preview    # Watches, and mounts a webserver at http://localhost:4000
 
 <p>接着在<code>source/_layouts/default.html</code>中引入该文件：</p>
 
-<pre><code class="sh"><script type="text/javascript" src="../../javascripts/scrolltotop.js"></script>
+<pre><code class="sh"><script type="text/javascript" src="/javascripts/scrolltotop.js"></script>
 </code></pre>
 
 <p>此时博客在右下角添加了一个返回页面顶部的button。</p>

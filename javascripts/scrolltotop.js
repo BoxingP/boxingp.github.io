@@ -1,6 +1,6 @@
 var scrolltotop = {
     setting: {startline: 100, scrollto: 0, scrollduration: 1e3, fadeduration: [500, 100]},
-    controlHTML: '<img src="../images/arrow.png" />',
+    controlHTML: '<img src="/images/arrow.png" />',
     controlattrs: {offsetx: 100, offsety: 60},
     anchorkeyword: "#top",
     state: {isvisible: !1, shouldvisible: !1},
