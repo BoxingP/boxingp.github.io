@@ -173,7 +173,9 @@ $ rake generate
 $ rake deploy
 ```
 
-它们会生成你的博客，把生成的文件复制到`_deploy`中，把它们添加到git，commit然后push到`master`branch。
+`rake generate`会把`source`文件夹下面的markdown文件编译为html文件，并复制到`public`文件夹下，因此`public`下的结构跟`source`的一致，里边的内容为最终的静态页面。
+
+`rake deploy`会将生成的静态页面复制到`_deploy`文件夹下并把它们添加到git，commit然后push到Github Pages仓库的`master`branch上。
 
 最后用浏览器打开`http://USER_NAME.github.io`，你就会看见自己的博客了。首次push可能会花费一段时间等待Github为你生成页面。
 
@@ -260,7 +262,6 @@ $ rake preview    # Watches, and mounts a webserver at http://localhost:4000
 
 ```sh
 <script type="text/javascript" src="http://arrow.scrolltotop.com/YOUR_CHOICE.js"></script>
-<noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
 ```
 
 接着在`source/_layouts/default.html`中引入该文件：
@@ -271,9 +272,21 @@ $ rake preview    # Watches, and mounts a webserver at http://localhost:4000
 
 此时博客在右下角添加了一个返回页面顶部的button。
 
+当然也可以在`source/javascripts`文件夹下保存使用到的javascript文件，直接在`scroll_to_top.html`中调用：
+
+```sh
+<script type="text/javascript" src="/javascripts/FILE_NAME.js"></script>
+```
+
+制作属于自己的button。
+
 ###在首页添加“继续阅读”按钮
 
 在博客中插入`<!-- more -->`后，在博客首页上，会把该标记之下的博客内容隐藏，点击`Read on →`按钮可以看到整篇博客。
+
+###使用个性化的Favicon
+
+在`source`文件夹下将`favicon.png`替换成自己的图片。注意，需要使用16px×16px的图片，256色或24位，所以图片的内容不要太复杂。
 
 ##小结
 
