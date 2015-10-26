@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "更好地配置git log"
+title: "设置git log"
 date: 2015-01-26 18:45:06 +0800
 comments: true
 categories:
 - Git
 - Tool
+- Configuration
 ---
 
 [Git](http://git-scm.com/)是一个分布式的版本控制软件，由Linux内核开发者[Linus Torvalds](http://en.wikipedia.org/wiki/Linus_Torvalds)开发设计。这里多一句嘴，Linux和Git任意完成一个就可以留名青史，Linus一人包场了。~~妈妈问我为什么跪着写完这篇博客。~~
