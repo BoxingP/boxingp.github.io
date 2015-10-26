@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tool | Rain-driven Development]]></title>
   <link href="http://boxingp.github.io/blog/categories/tool/atom.xml" rel="self"/>
   <link href="http://boxingp.github.io/"/>
-  <updated>2015-10-27T01:00:31+08:00</updated>
+  <updated>2015-10-27T01:21:05+08:00</updated>
   <id>http://boxingp.github.io/</id>
   <author>
     <name><![CDATA[Boxing]]></name>
@@ -364,10 +364,10 @@ $ git config daemon.receivepack true
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[更好地配置git Log]]></title>
-    <link href="http://boxingp.github.io/blog/2015/01/26/config-git-log-better/"/>
+    <title type="html"><![CDATA[设置git Log]]></title>
+    <link href="http://boxingp.github.io/blog/2015/01/26/config-git-log/"/>
     <updated>2015-01-26T18:45:06+08:00</updated>
-    <id>http://boxingp.github.io/blog/2015/01/26/config-git-log-better</id>
+    <id>http://boxingp.github.io/blog/2015/01/26/config-git-log</id>
     <content type="html"><![CDATA[<p><a href="http://git-scm.com/">Git</a>是一个分布式的版本控制软件，由Linux内核开发者<a href="http://en.wikipedia.org/wiki/Linus_Torvalds">Linus Torvalds</a>开发设计。这里多一句嘴，Linux和Git任意完成一个就可以留名青史，Linus一人包场了。<del>妈妈问我为什么跪着写完这篇博客。</del></p>
 
 <p>自己14年才开始使用Git，之前就是在本地很low地创建不同的文件夹来保存代码。使用Git后，<del>“Diff，Add我闭着眼，reset回退你沉醉了没”</del>可以很自由的对代码进行版本管理，而不用担心自己会丢失历史版本。</p>
