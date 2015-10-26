@@ -415,9 +415,7 @@
 <p>在<code>source/_includes/custom</code>文件夹下新建一个<code>scroll_to_top.html</code>的HTML文件：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;script <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text/javascript&quot;</span> <span class="nv">src</span><span class="o">=</span><span class="s2">&quot;http://arrow.scrolltotop.com/YOUR_CHOICE.js&quot;</span>&gt;&lt;/script&gt;
-</span><span class='line'>&lt;noscript&gt;Not seeing a &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://www.scrolltotop.com/&quot;</span>&gt;Scroll to Top Button&lt;/a&gt;? Go to our FAQ page <span class="k">for</span> more info.&lt;/noscript&gt;
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -430,9 +428,22 @@
 
 <p>此时博客在右下角添加了一个返回页面顶部的button。</p>
 
+<p>当然也可以在<code>source/javascripts</code>文件夹下保存使用到的javascript文件，直接在<code>scroll_to_top.html</code>中调用：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;script <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text/javascript&quot;</span> <span class="nv">src</span><span class="o">=</span><span class="s2">&quot;/javascripts/FILE_NAME.js&quot;</span>&gt;&lt;/script&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>制作属于自己的button。</p>
+
 <h3>在首页添加“继续阅读”按钮</h3>
 
 <p>在博客中插入<code>&lt;!-- more --&gt;</code>后，在博客首页上，会把该标记之下的博客内容隐藏，点击<code>Read on →</code>按钮可以看到整篇博客。</p>
+
+<h3>使用个性化的Favicon</h3>
+
+<p>在<code>source</code>文件夹下将<code>favicon.png</code>替换成自己的图片。注意，需要使用16px×16px的图片，256色或24位，所以图片的内容不要太复杂。</p>
 
 <h2>小结</h2>
 

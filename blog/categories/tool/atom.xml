@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tool | Rain-driven Development]]></title>
   <link href="http://boxingp.github.io/blog/categories/tool/atom.xml" rel="self"/>
   <link href="http://boxingp.github.io/"/>
-  <updated>2015-10-27T01:30:31+08:00</updated>
+  <updated>2015-10-27T02:03:40+08:00</updated>
   <id>http://boxingp.github.io/</id>
   <author>
     <name><![CDATA[Boxing]]></name>
@@ -254,19 +254,33 @@ $ rake preview    # Watches, and mounts a webserver at http://localhost:4000
 <script type="text/javascript" src="http://arrow.scrolltotop.com/YOUR_CHOICE.js"></script>
 
 
-<p><noscript>Not seeing a <a href="http://www.scrolltotop.com/">Scroll to Top Button</a>? Go to our FAQ page for more info.</noscript>
-```</p>
-
-<p>接着在<code>source/_layouts/default.html</code>中引入该文件：</p>
-
-<pre><code class="sh"><script type="text/javascript" src="/javascripts/scrolltotop.js"></script>
+<pre><code>
+接着在`source/_layouts/default.html`中引入该文件：
 </code></pre>
 
+<p><script type="text/javascript" src="/javascripts/scrolltotop.js"></script>
+```</p>
+
 <p>此时博客在右下角添加了一个返回页面顶部的button。</p>
+
+<p>当然也可以在<code>source/javascripts</code>文件夹下保存使用到的javascript文件，直接在<code>scroll_to_top.html</code>中调用：</p>
+
+<p>```sh</p>
+
+<script type="text/javascript" src="http://boxingp.github.io/javascripts/FILE_NAME.js"></script>
+
+
+<p>```</p>
+
+<p>制作属于自己的button。</p>
 
 <h3>在首页添加“继续阅读”按钮</h3>
 
 <p>在博客中插入<code>&lt;!-- more --&gt;</code>后，在博客首页上，会把该标记之下的博客内容隐藏，点击<code>Read on →</code>按钮可以看到整篇博客。</p>
+
+<h3>使用个性化的Favicon</h3>
+
+<p>在<code>source</code>文件夹下将<code>favicon.png</code>替换成自己的图片。注意，需要使用16px×16px的图片，256色或24位，所以图片的内容不要太复杂。</p>
 
 <h2>小结</h2>
 
