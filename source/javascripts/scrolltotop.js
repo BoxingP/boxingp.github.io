@@ -26,7 +26,7 @@ var scrolltotop = {
                 right: o.controlattrs.offsetx,
                 opacity: 0,
                 cursor: "pointer"
-            }).attr({title: "Scroll to Top"}).click(function () {
+            }).hover(function(){$(this).css({opacity: 0.6})}, function(){$(this).css({opacity: 1})}).attr({title: "Scroll to Top"}).click(function () {
                 return o.scrollup(), !1
             }).appendTo("body"), document.all && !window.XMLHttpRequest && "" != o.$control.text() && o.$control.css({width: o.$control.width()}), o.togglecontrol(), t('a[href="' + o.anchorkeyword + '"]').click(function () {
                 return o.scrollup(), !1
