@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Github | Rain-driven Development]]></title>
   <link href="http://boxingp.github.io/blog/categories/github/atom.xml" rel="self"/>
   <link href="http://boxingp.github.io/"/>
-  <updated>2015-10-27T02:03:40+08:00</updated>
+  <updated>2015-10-27T02:40:19+08:00</updated>
   <id>http://boxingp.github.io/</id>
   <author>
     <name><![CDATA[Boxing]]></name>
@@ -169,7 +169,9 @@ email:              # Email address for the RSS feed if you want it.
 $ rake deploy
 </code></pre>
 
-<p>它们会生成你的博客，把生成的文件复制到<code>_deploy</code>中，把它们添加到git，commit然后push到<code>master</code>branch。</p>
+<p><code>rake generate</code>会把<code>source</code>文件夹下面的markdown文件编译为html文件，并复制到<code>public</code>文件夹下，因此<code>public</code>下的结构跟<code>source</code>的一致，里边的内容为最终的静态页面。</p>
+
+<p><code>rake deploy</code>会将生成的静态页面复制到<code>_deploy</code>文件夹下并把它们添加到git，commit然后push到Github Pages仓库的<code>master</code>branch上。</p>
 
 <p>最后用浏览器打开<code>http://USER_NAME.github.io</code>，你就会看见自己的博客了。首次push可能会花费一段时间等待Github为你生成页面。</p>
 
