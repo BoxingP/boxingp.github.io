@@ -4,7 +4,7 @@
   <title><![CDATA[Rain-driven Development]]></title>
   <link href="http://boxingp.github.io/atom.xml" rel="self"/>
   <link href="http://boxingp.github.io/"/>
-  <updated>2015-11-02T03:06:08+08:00</updated>
+  <updated>2015-11-06T00:40:34+08:00</updated>
   <id>http://boxingp.github.io/</id>
   <author>
     <name><![CDATA[Boxing]]></name>
@@ -12,6 +12,50 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[STOP PHUBBING]]></title>
+    <link href="http://boxingp.github.io/blog/2015/11/05/stop-phubbing/"/>
+    <updated>2015-11-05T23:22:25+08:00</updated>
+    <id>http://boxingp.github.io/blog/2015/11/05/stop-phubbing</id>
+    <content type="html"><![CDATA[<p>STOP PHUBBING!</p>
+
+<!-- more -->
+
+
+<p>现在生活中越来越多的“低头族”，科技的发展既拉近了人与人之间的距离，也推远了人与人之间的距离。</p>
+
+<p>即使是家庭聚会，大家也更沉迷于手中的那三寸的世界。是时候放下手机，多感受身边的美好。</p>
+
+<p>“Phubbing”这个词即是由<a href="https://en.wikipedia.org/wiki/Macquarie_Dictionary">Macquarie词典</a>创造来形容这一因使用手机而冷落身边人的现象。它出现于2012年5月，是在<a href="http://mccann.com.au/">McCann</a>邀请词典编纂者、作家和诗人创造一个词描述该行为的背景下产生的。那时开始，“拒当低头族”这个活动也就由McCann推广开了。<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<p><del>大家可能没听过McCann，它就是制作了“蠢蠢的死法”<a href="http://v.youku.com/v_show/id_XNDc1OTIxMzI0.html">youku</a>/<a href="http://www.youtube.com/watch?v=IJNR2EpS0jw">Youtube</a>的那家广告公司。</del></p>
+
+<p>“拒当低头族”活动的网站<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>以及相关的Facebook页面，虽然是旨在推广澳大利亚Macquarie词典公关活动的一部分，但是这种提倡的生活方式确实值得我们肯定。</p>
+
+<p>一部名为“<a href="http://www.youtube.com/watch?v=ZSOfuUYCV_0">Phubbing: A Word is Born</a>”的短片，描述了整个过程。虽然是作为Macquarie词典的广告，但是“低头族”的这一现象确实是全世界都存在的。我们要想想手中的那三寸世界让我们错过了什么。</p>
+
+<h2>我的设计</h2>
+
+<p>一时技痒，做了一张海报提醒大家放下手机，因为身边有更多美好和重要的事值得你去注意。</p>
+
+<p><img src="http://boxingp.github.io/images/2015/stop_phubbing.png" width="500" height="707"></p>
+
+<p><a href="http://boxingp.github.io/images/2015/stop_phubbing.png">“A4大小，300dpi，可供打印~(≧▽≦)/~”</a></p>
+
+<h2>参考资料</h2>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p><a href="https://en.wikipedia.org/wiki/Phubbing">Phubbing - Wikipedia</a><a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p><a href="http://stopphubbing.com/">Stop Phubbing</a><a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CNNIC证书值得信任吗？]]></title>
