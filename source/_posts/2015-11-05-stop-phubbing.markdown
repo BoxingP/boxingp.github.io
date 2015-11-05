@@ -32,6 +32,14 @@ STOP PHUBBING!
 
 [“A4大小，300dpi，可供打印~(≧▽≦)/~”](/images/2015/stop_phubbing.png)
 
+##题外话
+
+最近在用一个APP：[Forest](http://www.forestapp.cc/)
+
+{% img /images/2015/forest_app.png 120 120%}
+
+在提高自己注意力的同时，赚取的金币积攒下来还可以让APP在现实中种一棵树，顿时感觉自己~~萌萌哒~~为更美好的世界贡献出了自己的力量。（严肃脸）
+
 ##参考资料
 
 [^1]: [Phubbing - Wikipedia](https://en.wikipedia.org/wiki/Phubbing)
